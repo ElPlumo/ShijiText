@@ -26,8 +26,19 @@
       color: white;
     }
 
+    button,
+    input,
+    textarea {
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+
     /* =========================
-       LOGIN / SIGN UP
+       LOGIN
     ========================= */
 
     #authScreen {
@@ -44,7 +55,7 @@
       padding: 35px;
       background: #2f3136;
       border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 40px rgba(0,0,0,.4);
     }
 
     .authBox h1 {
@@ -82,14 +93,11 @@
       background: #5865f2;
       color: white;
       font-size: 16px;
-      cursor: pointer;
     }
 
     .authButton:hover {
       background: #4752c4;
     }
-
-    /* FIXED SIGN UP BUTTON */
 
     .switchButton {
       width: 100%;
@@ -98,7 +106,6 @@
       background: transparent;
       border: none;
       color: #00aff4;
-      cursor: pointer;
       font-size: 14px;
     }
 
@@ -116,6 +123,7 @@
     .hidden {
       display: none !important;
     }
+
 
     /* =========================
        CHAT
@@ -147,13 +155,25 @@
       margin-left: 10px;
     }
 
+    #topButtons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .topButton {
+      border: none;
+      border-radius: 6px;
+      padding: 9px 14px;
+      color: white;
+      background: #5865f2;
+    }
+
+    .topButton:hover {
+      background: #4752c4;
+    }
+
     #logoutButton {
       background: #ed4245;
-      color: white;
-      border: none;
-      padding: 9px 15px;
-      border-radius: 6px;
-      cursor: pointer;
     }
 
     #logoutButton:hover {
@@ -180,6 +200,7 @@
 
     .messageText {
       margin-top: 4px;
+      word-break: break-word;
     }
 
     #messageArea {
@@ -206,12 +227,238 @@
       border-radius: 7px;
       background: #5865f2;
       color: white;
-      cursor: pointer;
-      font-size: 15px;
     }
 
-    #sendButton:hover {
-      background: #4752c4;
+
+    /* =========================
+       PROFILE OVERLAY
+    ========================= */
+
+    #profileOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    #profileEditor {
+      width: 900px;
+      max-width: 100%;
+      background: #2f3136;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    }
+
+
+    /* =========================
+       PROFILE HEADER
+    ========================= */
+
+    #profileHeader {
+      height: 150px;
+      background: #5865f2;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    #closeProfile {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 35px;
+      height: 35px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(0,0,0,.5);
+      color: white;
+      font-size: 20px;
+    }
+
+    #closeProfile:hover {
+      background: rgba(0,0,0,.8);
+    }
+
+
+    /* =========================
+       PROFILE CONTENT
+    ========================= */
+
+    #profileContent {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      padding: 25px;
+    }
+
+    @media (max-width: 700px) {
+
+      #profileContent {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+
+    /* =========================
+       EDITOR
+    ========================= */
+
+    #editorSection h2,
+    #previewSection h2 {
+      margin-top: 0;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #b9bbbe;
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 11px;
+      background: #40444b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      outline: 2px solid #5865f2;
+    }
+
+    #colorInput {
+      height: 45px;
+      padding: 3px;
+    }
+
+    #saveProfile {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 7px;
+      background: #43b581;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    #saveProfile:hover {
+      background: #369b6e;
+    }
+
+    #profileStatus {
+      text-align: center;
+      margin-top: 12px;
+      color: #ffcc00;
+      min-height: 20px;
+    }
+
+
+    /* =========================
+       PROFILE PREVIEW
+    ========================= */
+
+    #profileCard {
+      background: #18191c;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    #previewBanner {
+      height: 120px;
+      background: #5865f2;
+      background-size: cover;
+      background-position: center;
+    }
+
+    #previewBody {
+      padding: 0 20px 20px;
+      position: relative;
+    }
+
+    #previewAvatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 6px solid #18191c;
+      background: #5865f2;
+      object-fit: cover;
+      margin-top: -45px;
+      display: block;
+    }
+
+    #previewName {
+      font-size: 23px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #previewUsername {
+      color: #b9bbbe;
+      margin-top: 3px;
+    }
+
+    #previewStatus {
+      margin-top: 12px;
+      color: #b9bbbe;
+    }
+
+    #previewBio {
+      margin-top: 15px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #previewEmoji {
+      font-size: 35px;
+      margin-top: 15px;
+    }
+
+    #previewLinks {
+      margin-top: 15px;
+    }
+
+    #previewLinks a {
+      color: #00aff4;
+      text-decoration: none;
+    }
+
+    #previewLinks a:hover {
+      text-decoration: underline;
+    }
+
+    #previewDecoration {
+      margin-top: 15px;
+      padding: 8px;
+      border-radius: 6px;
+      background: #2f3136;
+      color: #b9bbbe;
     }
 
   </style>
@@ -219,9 +466,10 @@
 
 <body>
 
-  <!-- =========================
+
+  <!-- =====================================================
        AUTH SCREEN
-  ========================= -->
+  ====================================================== -->
 
   <div id="authScreen">
 
@@ -238,29 +486,28 @@
         Log in to continue to My Chat
       </div>
 
-      <!-- Username only appears during Sign Up -->
 
       <input
         id="usernameInput"
         class="hidden"
         type="text"
         placeholder="Username"
-        autocomplete="username"
       >
+
 
       <input
         id="emailInput"
         type="email"
         placeholder="Email"
-        autocomplete="email"
       >
+
 
       <input
         id="passwordInput"
         type="password"
         placeholder="Password"
-        autocomplete="current-password"
       >
+
 
       <button
         class="authButton"
@@ -270,7 +517,6 @@
         Log In
       </button>
 
-      <!-- THIS IS NOW A REAL BUTTON -->
 
       <button
         class="switchButton"
@@ -280,6 +526,7 @@
         Don't have an account? Sign Up
       </button>
 
+
       <div id="status"></div>
 
     </div>
@@ -287,11 +534,13 @@
   </div>
 
 
-  <!-- =========================
+
+  <!-- =====================================================
        CHAT SCREEN
-  ========================= -->
+  ====================================================== -->
 
   <div id="chatScreen">
+
 
     <div id="topBar">
 
@@ -303,12 +552,27 @@
 
       </div>
 
-      <button
-        id="logoutButton"
-        type="button"
-      >
-        Log Out
-      </button>
+
+      <div id="topButtons">
+
+        <button
+          class="topButton"
+          id="profileButton"
+          type="button"
+        >
+          👤 Profile
+        </button>
+
+
+        <button
+          class="topButton"
+          id="logoutButton"
+          type="button"
+        >
+          Log Out
+        </button>
+
+      </div>
 
     </div>
 
@@ -336,17 +600,334 @@
   </div>
 
 
+
+  <!-- =====================================================
+       PROFILE EDITOR
+  ====================================================== -->
+
+  <div id="profileOverlay">
+
+    <div id="profileEditor">
+
+
+      <div id="profileHeader">
+
+        <button
+          id="closeProfile"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div id="profileContent">
+
+
+        <!-- =========================
+             EDIT PROFILE
+        ========================== -->
+
+        <section id="editorSection">
+
+          <h2>Edit Profile</h2>
+
+
+          <div class="field">
+
+            <label>
+              Display Name
+            </label>
+
+            <input
+              id="displayNameInput"
+              type="text"
+              placeholder="Your display name"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Username
+            </label>
+
+            <input
+              id="profileUsernameInput"
+              type="text"
+              placeholder="Username"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Profile Picture URL
+            </label>
+
+            <input
+              id="avatarInput"
+              type="url"
+              placeholder="https://example.com/avatar.png"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Banner URL
+            </label>
+
+            <input
+              id="bannerInput"
+              type="url"
+              placeholder="https://example.com/banner.png"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Bio
+            </label>
+
+            <textarea
+              id="bioInput"
+              placeholder="Tell people about yourself..."
+            ></textarea>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Custom Status
+            </label>
+
+            <input
+              id="customStatusInput"
+              type="text"
+              placeholder="What are you up to?"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Favorite Emoji
+            </label>
+
+            <input
+              id="emojiInput"
+              type="text"
+              placeholder="😀"
+              maxlength="10"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Accent Color
+            </label>
+
+            <input
+              id="colorInput"
+              type="color"
+              value="#5865F2"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Website
+            </label>
+
+            <input
+              id="websiteInput"
+              type="url"
+              placeholder="https://example.com"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Profile Decoration
+            </label>
+
+            <select id="decorationInput">
+
+              <option value="">
+                None
+              </option>
+
+              <option value="✨ Sparkles">
+                ✨ Sparkles
+              </option>
+
+              <option value="⭐ Stars">
+                ⭐ Stars
+              </option>
+
+              <option value="🌈 Rainbow">
+                🌈 Rainbow
+              </option>
+
+              <option value="💫 Cosmic">
+                💫 Cosmic
+              </option>
+
+              <option value="🔥 Fire">
+                🔥 Fire
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Profile Effect
+            </label>
+
+            <select id="effectInput">
+
+              <option value="">
+                None
+              </option>
+
+              <option value="Glow">
+                Glow
+              </option>
+
+              <option value="Shadow">
+                Shadow
+              </option>
+
+              <option value="Glass">
+                Glass
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <button
+            id="saveProfile"
+            type="button"
+          >
+            Save Profile
+          </button>
+
+
+          <div id="profileStatus"></div>
+
+        </section>
+
+
+
+        <!-- =========================
+             PREVIEW
+        ========================== -->
+
+        <section id="previewSection">
+
+          <h2>Preview</h2>
+
+
+          <div id="profileCard">
+
+            <div id="previewBanner"></div>
+
+
+            <div id="previewBody">
+
+              <img
+                id="previewAvatar"
+                src=""
+                alt="Profile picture"
+              >
+
+
+              <div id="previewName">
+                Your Name
+              </div>
+
+
+              <div id="previewUsername">
+                @username
+              </div>
+
+
+              <div id="previewStatus">
+                No status
+              </div>
+
+
+              <div id="previewBio">
+                Your bio will appear here.
+              </div>
+
+
+              <div id="previewEmoji">
+                😀
+              </div>
+
+
+              <div id="previewLinks"></div>
+
+
+              <div id="previewDecoration"></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
 <script>
 
-  /* =========================
+  /* =====================================================
      SUPABASE
-  ========================= */
+  ====================================================== */
 
   const SUPABASE_URL =
     "https://tscporvkmgkwymrftzyn.supabase.co";
 
   const SUPABASE_KEY =
     "sb_publishable_f-OuNvj9jXyjcL0sZ3awvg__HZ3S_Ry";
+
 
   const supabaseClient =
     window.supabase.createClient(
@@ -355,17 +936,19 @@
     );
 
 
-  /* =========================
+
+  /* =====================================================
      SOCKET.IO
-  ========================= */
+  ====================================================== */
 
   const socket =
     io("https://chat-server-2h9q.onrender.com");
 
 
-  /* =========================
-     ELEMENTS
-  ========================= */
+
+  /* =====================================================
+     AUTH ELEMENTS
+  ====================================================== */
 
   const authScreen =
     document.getElementById("authScreen");
@@ -397,11 +980,20 @@
   const status =
     document.getElementById("status");
 
+
+
+  /* =====================================================
+     CHAT ELEMENTS
+  ====================================================== */
+
   const currentUser =
     document.getElementById("currentUser");
 
   const logoutButton =
     document.getElementById("logoutButton");
+
+  const profileButton =
+    document.getElementById("profileButton");
 
   const messages =
     document.getElementById("messages");
@@ -413,143 +1005,286 @@
     document.getElementById("sendButton");
 
 
+
+  /* =====================================================
+     PROFILE ELEMENTS
+  ====================================================== */
+
+  const profileOverlay =
+    document.getElementById("profileOverlay");
+
+  const closeProfile =
+    document.getElementById("closeProfile");
+
+  const displayNameInput =
+    document.getElementById("displayNameInput");
+
+  const profileUsernameInput =
+    document.getElementById("profileUsernameInput");
+
+  const avatarInput =
+    document.getElementById("avatarInput");
+
+  const bannerInput =
+    document.getElementById("bannerInput");
+
+  const bioInput =
+    document.getElementById("bioInput");
+
+  const customStatusInput =
+    document.getElementById("customStatusInput");
+
+  const emojiInput =
+    document.getElementById("emojiInput");
+
+  const colorInput =
+    document.getElementById("colorInput");
+
+  const websiteInput =
+    document.getElementById("websiteInput");
+
+  const decorationInput =
+    document.getElementById("decorationInput");
+
+  const effectInput =
+    document.getElementById("effectInput");
+
+  const saveProfile =
+    document.getElementById("saveProfile");
+
+  const profileStatus =
+    document.getElementById("profileStatus");
+
+
+  const previewBanner =
+    document.getElementById("previewBanner");
+
+  const previewAvatar =
+    document.getElementById("previewAvatar");
+
+  const previewName =
+    document.getElementById("previewName");
+
+  const previewUsername =
+    document.getElementById("previewUsername");
+
+  const previewStatus =
+    document.getElementById("previewStatus");
+
+  const previewBio =
+    document.getElementById("previewBio");
+
+  const previewEmoji =
+    document.getElementById("previewEmoji");
+
+  const previewLinks =
+    document.getElementById("previewLinks");
+
+  const previewDecoration =
+    document.getElementById("previewDecoration");
+
+
+
+  /* =====================================================
+     VARIABLES
+  ====================================================== */
+
   let signupMode = false;
   let loggedInUser = null;
 
 
-  /* =========================
-     SWITCH LOGIN / SIGN UP
-  ========================= */
 
-  switchButton.addEventListener("click", function () {
+  /* =====================================================
+     LOGIN / SIGN UP SWITCH
+  ====================================================== */
 
-    signupMode = !signupMode;
+  switchButton.addEventListener(
+    "click",
+    function () {
 
-    status.textContent = "";
+      signupMode = !signupMode;
 
-    if (signupMode) {
-
-      // SIGN UP SCREEN
-
-      authTitle.textContent =
-        "Create Your Account";
-
-      authSubtitle.textContent =
-        "Make your account for My Chat";
-
-      authButton.textContent =
-        "Sign Up";
-
-      usernameInput.classList.remove("hidden");
-
-      usernameInput.focus();
-
-      switchButton.textContent =
-        "Already have an account? Log In";
-
-      passwordInput.setAttribute(
-        "autocomplete",
-        "new-password"
-      );
-
-    } else {
-
-      // LOGIN SCREEN
-
-      authTitle.textContent =
-        "Welcome Back!";
-
-      authSubtitle.textContent =
-        "Log in to continue to My Chat";
-
-      authButton.textContent =
-        "Log In";
-
-      usernameInput.classList.add("hidden");
-
-      switchButton.textContent =
-        "Don't have an account? Sign Up";
-
-      emailInput.focus();
-
-      passwordInput.setAttribute(
-        "autocomplete",
-        "current-password"
-      );
-
-    }
-
-  });
+      status.textContent = "";
 
 
-  /* =========================
-     SIGN UP / LOGIN
-  ========================= */
+      if (signupMode) {
 
-  authButton.addEventListener("click", async function () {
+        authTitle.textContent =
+          "Create Your Account";
 
-    const email =
-      emailInput.value.trim();
+        authSubtitle.textContent =
+          "Make your account for My Chat";
 
-    const password =
-      passwordInput.value;
+        authButton.textContent =
+          "Sign Up";
 
-    const username =
-      usernameInput.value.trim();
-
-
-    /* VALIDATION */
-
-    if (!email) {
-
-      status.textContent =
-        "Please enter your email.";
-
-      return;
-    }
-
-
-    if (!password) {
-
-      status.textContent =
-        "Please enter your password.";
-
-      return;
-    }
-
-
-    /* =========================
-       SIGN UP
-    ========================= */
-
-    if (signupMode) {
-
-      if (!username) {
-
-        status.textContent =
-          "Please choose a username.";
+        usernameInput.classList.remove(
+          "hidden"
+        );
 
         usernameInput.focus();
 
-        return;
+        switchButton.textContent =
+          "Already have an account? Log In";
+
+
+      } else {
+
+        authTitle.textContent =
+          "Welcome Back!";
+
+        authSubtitle.textContent =
+          "Log in to continue to My Chat";
+
+        authButton.textContent =
+          "Log In";
+
+        usernameInput.classList.add(
+          "hidden"
+        );
+
+        emailInput.focus();
+
+        switchButton.textContent =
+          "Don't have an account? Sign Up";
+
       }
 
+    }
+  );
 
-      if (username.length < 3) {
+
+
+  /* =====================================================
+     SIGN UP / LOGIN
+  ====================================================== */
+
+  authButton.addEventListener(
+    "click",
+    async function () {
+
+      const email =
+        emailInput.value.trim();
+
+      const password =
+        passwordInput.value;
+
+      const username =
+        usernameInput.value.trim();
+
+
+      if (!email) {
 
         status.textContent =
-          "Username must be at least 3 characters.";
+          "Please enter your email.";
 
         return;
       }
 
 
+      if (!password) {
+
+        status.textContent =
+          "Please enter your password.";
+
+        return;
+      }
+
+
+      /* =========================
+         SIGN UP
+      ========================== */
+
+      if (signupMode) {
+
+        if (!username) {
+
+          status.textContent =
+            "Please choose a username.";
+
+          return;
+        }
+
+
+        if (username.length < 3) {
+
+          status.textContent =
+            "Username must be at least 3 characters.";
+
+          return;
+        }
+
+
+        status.textContent =
+          "Creating your account...";
+
+
+        const { data, error } =
+          await supabaseClient.auth.signUp({
+
+            email: email,
+
+            password: password
+
+          });
+
+
+        if (error) {
+
+          status.textContent =
+            error.message;
+
+          return;
+        }
+
+
+        if (data.user) {
+
+          const { error: profileError } =
+            await supabaseClient
+              .from("profiles")
+              .insert({
+
+                id: data.user.id,
+
+                username: username,
+
+                display_name: username
+
+              });
+
+
+          if (profileError) {
+
+            status.textContent =
+              "Account created, but profile setup failed: " +
+              profileError.message;
+
+            return;
+          }
+
+        }
+
+
+        status.textContent =
+          "Account created! You can now log in.";
+
+        return;
+
+      }
+
+
+
+      /* =========================
+         LOGIN
+      ========================== */
+
       status.textContent =
-        "Creating your account...";
+        "Logging in...";
 
 
-      const { data, error } =
-        await supabaseClient.auth.signUp({
+      const { error } =
+        await supabaseClient.auth.signInWithPassword({
 
           email: email,
 
@@ -567,79 +1302,16 @@
       }
 
 
-      /* CREATE PROFILE */
-
-      if (data.user) {
-
-        const { error: profileError } =
-          await supabaseClient
-            .from("profiles")
-            .insert({
-
-              id: data.user.id,
-
-              username: username,
-
-              display_name: username
-
-            });
-
-
-        if (profileError) {
-
-          status.textContent =
-            "Account created, but your profile could not be created: " +
-            profileError.message;
-
-          return;
-        }
-
-      }
-
-
-      status.textContent =
-        "Account created! Check your email if confirmation is required.";
-
-      return;
+      await showChat();
 
     }
+  );
 
 
-    /* =========================
-       LOGIN
-    ========================= */
 
-    status.textContent =
-      "Logging in...";
-
-
-    const { error } =
-      await supabaseClient.auth.signInWithPassword({
-
-        email: email,
-
-        password: password
-
-      });
-
-
-    if (error) {
-
-      status.textContent =
-        error.message;
-
-      return;
-    }
-
-
-    await showChat();
-
-  });
-
-
-  /* =========================
+  /* =====================================================
      SHOW CHAT
-  ========================= */
+  ====================================================== */
 
   async function showChat() {
 
@@ -649,6 +1321,30 @@
     loggedInUser =
       data.user;
 
+
+    if (!loggedInUser) {
+      return;
+    }
+
+
+    await updateUserDisplay();
+
+
+    authScreen.style.display =
+      "none";
+
+    chatScreen.style.display =
+      "flex";
+
+  }
+
+
+
+  /* =====================================================
+     UPDATE USER DISPLAY
+  ====================================================== */
+
+  async function updateUserDisplay() {
 
     if (!loggedInUser) {
       return;
@@ -668,13 +1364,6 @@
         .maybeSingle();
 
 
-    authScreen.style.display =
-      "none";
-
-    chatScreen.style.display =
-      "flex";
-
-
     if (profile) {
 
       currentUser.textContent =
@@ -690,9 +1379,10 @@
   }
 
 
-  /* =========================
+
+  /* =====================================================
      LOG OUT
-  ========================= */
+  ====================================================== */
 
   logoutButton.addEventListener(
     "click",
@@ -720,9 +1410,490 @@
   );
 
 
-  /* =========================
+
+  /* =====================================================
+     OPEN PROFILE
+  ====================================================== */
+
+  profileButton.addEventListener(
+    "click",
+    async function () {
+
+      await loadProfile();
+
+      profileOverlay.style.display =
+        "flex";
+
+    }
+  );
+
+
+
+  /* =====================================================
+     CLOSE PROFILE
+  ====================================================== */
+
+  closeProfile.addEventListener(
+    "click",
+    function () {
+
+      profileOverlay.style.display =
+        "none";
+
+    }
+  );
+
+
+  profileOverlay.addEventListener(
+    "click",
+    function (event) {
+
+      if (event.target === profileOverlay) {
+
+        profileOverlay.style.display =
+          "none";
+
+      }
+
+    }
+  );
+
+
+
+  /* =====================================================
+     LOAD PROFILE
+  ====================================================== */
+
+  async function loadProfile() {
+
+    if (!loggedInUser) {
+      return;
+    }
+
+
+    profileStatus.textContent =
+      "Loading...";
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq(
+          "id",
+          loggedInUser.id
+        )
+        .maybeSingle();
+
+
+    if (error) {
+
+      profileStatus.textContent =
+        error.message;
+
+      return;
+    }
+
+
+    if (!data) {
+
+      profileStatus.textContent =
+        "No profile found.";
+
+      return;
+    }
+
+
+    displayNameInput.value =
+      data.display_name || "";
+
+    profileUsernameInput.value =
+      data.username || "";
+
+    avatarInput.value =
+      data.avatar_url || "";
+
+    bannerInput.value =
+      data.banner_url || "";
+
+    bioInput.value =
+      data.bio || "";
+
+    customStatusInput.value =
+      data.custom_status || "";
+
+    emojiInput.value =
+      data.favorite_emoji || "😀";
+
+    colorInput.value =
+      data.accent_color || "#5865F2";
+
+    websiteInput.value =
+      data.website_url || "";
+
+    decorationInput.value =
+      data.profile_decoration || "";
+
+    effectInput.value =
+      data.profile_effect || "";
+
+
+    profileStatus.textContent = "";
+
+
+    updatePreview();
+
+  }
+
+
+
+  /* =====================================================
+     SAVE PROFILE
+  ====================================================== */
+
+  saveProfile.addEventListener(
+    "click",
+    async function () {
+
+      if (!loggedInUser) {
+        return;
+      }
+
+
+      const username =
+        profileUsernameInput.value.trim();
+
+      const displayName =
+        displayNameInput.value.trim();
+
+
+      if (!username) {
+
+        profileStatus.textContent =
+          "Username cannot be empty.";
+
+        return;
+      }
+
+
+      if (!displayName) {
+
+        profileStatus.textContent =
+          "Display name cannot be empty.";
+
+        return;
+      }
+
+
+      profileStatus.textContent =
+        "Saving...";
+
+
+      const { error } =
+        await supabaseClient
+          .from("profiles")
+          .update({
+
+            username:
+              username,
+
+            display_name:
+              displayName,
+
+            bio:
+              bioInput.value,
+
+            avatar_url:
+              avatarInput.value,
+
+            banner_url:
+              bannerInput.value,
+
+            accent_color:
+              colorInput.value,
+
+            custom_status:
+              customStatusInput.value,
+
+            favorite_emoji:
+              emojiInput.value,
+
+            website_url:
+              websiteInput.value,
+
+            profile_decoration:
+              decorationInput.value,
+
+            profile_effect:
+              effectInput.value,
+
+            updated_at:
+              new Date().toISOString()
+
+          })
+          .eq(
+            "id",
+            loggedInUser.id
+          );
+
+
+      if (error) {
+
+        profileStatus.textContent =
+          error.message;
+
+        return;
+      }
+
+
+      profileStatus.textContent =
+        "Profile saved! ✓";
+
+
+      await updateUserDisplay();
+
+      updatePreview();
+
+    }
+  );
+
+
+
+  /* =====================================================
+     LIVE PROFILE PREVIEW
+  ====================================================== */
+
+  const profileInputs = [
+
+    displayNameInput,
+
+    profileUsernameInput,
+
+    avatarInput,
+
+    bannerInput,
+
+    bioInput,
+
+    customStatusInput,
+
+    emojiInput,
+
+    colorInput,
+
+    websiteInput,
+
+    decorationInput,
+
+    effectInput
+
+  ];
+
+
+  profileInputs.forEach(
+    function (input) {
+
+      input.addEventListener(
+        "input",
+        updatePreview
+      );
+
+      input.addEventListener(
+        "change",
+        updatePreview
+      );
+
+    }
+  );
+
+
+
+  /* =====================================================
+     UPDATE PROFILE PREVIEW
+  ====================================================== */
+
+  function updatePreview() {
+
+    const name =
+      displayNameInput.value.trim() ||
+      "Your Name";
+
+    const username =
+      profileUsernameInput.value.trim() ||
+      "username";
+
+    const avatar =
+      avatarInput.value.trim();
+
+    const banner =
+      bannerInput.value.trim();
+
+    const bio =
+      bioInput.value.trim() ||
+      "Your bio will appear here.";
+
+    const customStatus =
+      customStatusInput.value.trim() ||
+      "No status";
+
+    const emoji =
+      emojiInput.value.trim() ||
+      "😀";
+
+    const color =
+      colorInput.value ||
+      "#5865F2";
+
+    const website =
+      websiteInput.value.trim();
+
+    const decoration =
+      decorationInput.value;
+
+    const effect =
+      effectInput.value;
+
+
+    /* NAME */
+
+    previewName.textContent =
+      name;
+
+
+    /* USERNAME */
+
+    previewUsername.textContent =
+      "@" + username;
+
+
+    /* BIO */
+
+    previewBio.textContent =
+      bio;
+
+
+    /* STATUS */
+
+    previewStatus.textContent =
+      "● " + customStatus;
+
+
+    /* EMOJI */
+
+    previewEmoji.textContent =
+      emoji;
+
+
+    /* COLOR */
+
+    previewBanner.style.backgroundColor =
+      color;
+
+    previewAvatar.style.backgroundColor =
+      color;
+
+
+    /* AVATAR */
+
+    if (avatar) {
+
+      previewAvatar.src =
+        avatar;
+
+    } else {
+
+      previewAvatar.removeAttribute(
+        "src"
+      );
+
+      previewAvatar.style.backgroundColor =
+        color;
+
+    }
+
+
+    /* BANNER */
+
+    if (banner) {
+
+      previewBanner.style.backgroundImage =
+        "url('" +
+        banner.replace(/'/g, "%27") +
+        "')";
+
+    } else {
+
+      previewBanner.style.backgroundImage =
+        "none";
+
+    }
+
+
+    /* WEBSITE */
+
+    previewLinks.innerHTML = "";
+
+    if (website) {
+
+      const link =
+        document.createElement("a");
+
+      link.href =
+        website;
+
+      link.target =
+        "_blank";
+
+      link.rel =
+        "noopener noreferrer";
+
+      link.textContent =
+        "🔗 " + website;
+
+      previewLinks.appendChild(
+        link
+      );
+
+    }
+
+
+    /* DECORATION */
+
+    previewDecoration.textContent =
+      decoration;
+
+
+    /* EFFECT */
+
+    if (effect === "Glow") {
+
+      profileCard.style.boxShadow =
+        "0 0 25px " + color;
+
+    } else if (effect === "Shadow") {
+
+      profileCard.style.boxShadow =
+        "0 15px 35px rgba(0,0,0,.8)";
+
+    } else if (effect === "Glass") {
+
+      profileCard.style.boxShadow =
+        "0 0 30px rgba(255,255,255,.15)";
+
+    } else {
+
+      profileCard.style.boxShadow =
+        "none";
+
+    }
+
+  }
+
+
+
+  /* =====================================================
      SEND MESSAGE
-  ========================= */
+  ====================================================== */
 
   function sendMessage() {
 
@@ -776,9 +1947,10 @@
   );
 
 
-  /* =========================
+
+  /* =====================================================
      RECEIVE MESSAGES
-  ========================= */
+  ====================================================== */
 
   socket.on(
     "chat message",
@@ -832,21 +2004,24 @@
   );
 
 
-  /* =========================
+
+  /* =====================================================
      CHECK EXISTING SESSION
-  ========================= */
+  ====================================================== */
 
   supabaseClient.auth
     .getSession()
-    .then(function ({ data }) {
+    .then(
+      function ({ data }) {
 
-      if (data.session) {
+        if (data.session) {
 
-        showChat();
+          showChat();
+
+        }
 
       }
-
-    });
+    );
 
 </script>
 
