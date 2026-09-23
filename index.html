@@ -4,12 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>My Chat</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -28,24 +30,41 @@
       font-family: inherit;
     }
 
-    /* AUTH */
+
+    /* =========================
+       AUTH
+    ========================= */
 
     #authScreen {
       min-height: 100vh;
+
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #5865f2, #8b5cf6, #ec4899);
+
       padding: 20px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #5865f2,
+          #8b5cf6,
+          #ec4899
+        );
     }
 
     .authBox {
       width: 100%;
       max-width: 430px;
+
       background: #1e1f22;
+
       padding: 35px;
+
       border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.4);
     }
 
     .authBox h1 {
@@ -61,25 +80,39 @@
 
     .authBox input {
       width: 100%;
+
       padding: 14px;
+
       margin: 8px 0;
+
       border: none;
       border-radius: 8px;
+
       background: #111214;
+
       color: white;
+
       outline: none;
     }
 
     .authButton {
       width: 100%;
+
       padding: 14px;
+
       margin-top: 12px;
+
       border: none;
       border-radius: 8px;
+
       background: #5865f2;
+
       color: white;
+
       font-weight: bold;
+
       cursor: pointer;
+
       font-size: 16px;
     }
 
@@ -90,107 +123,171 @@
     .switchButton {
       background: none;
       border: none;
+
       color: #00a8fc;
+
       cursor: pointer;
+
       font-size: 14px;
     }
 
     #authMessage {
       margin-top: 12px;
+
       min-height: 20px;
+
       color: #ff7b7b;
     }
 
-    /* CHAT */
+
+    /* =========================
+       CHAT APP
+    ========================= */
 
     #chatScreen {
       display: none;
+
       height: 100vh;
+
       overflow: hidden;
     }
 
     .app {
       display: flex;
+
       height: 100vh;
     }
 
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+
     .sidebar {
       width: 250px;
+
       background: #1e1f22;
-      border-right: 1px solid #111214;
+
+      border-right:
+        1px solid #111214;
+
       display: flex;
+
       flex-direction: column;
     }
 
     .serverTitle {
       padding: 18px;
+
       font-size: 20px;
+
       font-weight: bold;
-      border-bottom: 1px solid #111214;
+
+      border-bottom:
+        1px solid #111214;
     }
 
     .rooms {
       padding: 12px;
+
       flex: 1;
     }
 
     .room {
       padding: 12px;
+
       margin-bottom: 5px;
+
       border-radius: 7px;
+
       cursor: pointer;
+
       color: #b5bac1;
+
+      transition: .15s;
     }
 
-    .room:hover,
-    .room.active {
+    .room:hover {
       background: #35373c;
+
       color: white;
     }
 
+    .room.active {
+      background: #404249;
+
+      color: white;
+    }
+
+
+    /* =========================
+       USER PANEL
+    ========================= */
+
     .userPanel {
       padding: 12px;
+
       background: #111214;
+
       display: flex;
+
       align-items: center;
-      gap: 10px;
+
+      gap: 8px;
     }
 
     .smallAvatar {
       width: 38px;
       height: 38px;
+
       border-radius: 50%;
+
       object-fit: cover;
+
       background: #5865f2;
+
       display: flex;
+
       justify-content: center;
       align-items: center;
+
       font-weight: bold;
+
+      flex-shrink: 0;
     }
 
     .userInfo {
       flex: 1;
+
       overflow: hidden;
     }
 
     .userName {
       font-weight: bold;
+
       white-space: nowrap;
+
       overflow: hidden;
+
       text-overflow: ellipsis;
     }
 
     .userStatus {
       color: #23a55a;
+
       font-size: 12px;
     }
 
     .profileButton,
     .logoutButton {
       border: none;
+
       border-radius: 6px;
+
       padding: 7px;
+
       cursor: pointer;
+
       color: white;
     }
 
@@ -202,45 +299,73 @@
       background: #ed4245;
     }
 
-    /* MAIN CHAT */
+
+    /* =========================
+       MAIN
+    ========================= */
 
     .main {
       flex: 1;
+
       display: flex;
+
       flex-direction: column;
+
       min-width: 0;
     }
 
     .chatHeader {
       height: 60px;
+
       background: #1e1f22;
+
       display: flex;
+
       align-items: center;
+
       padding: 0 20px;
+
       font-size: 18px;
+
       font-weight: bold;
-      border-bottom: 1px solid #111214;
+
+      border-bottom:
+        1px solid #111214;
     }
 
     #messages {
       flex: 1;
+
       overflow-y: auto;
+
       padding: 20px;
+
       background: #313338;
     }
 
+
+    /* =========================
+       MESSAGES
+    ========================= */
+
     .message {
       display: flex;
+
       gap: 12px;
+
       margin-bottom: 18px;
     }
 
     .messageAvatar {
       width: 42px;
       height: 42px;
+
       border-radius: 50%;
+
       object-fit: cover;
+
       background: #5865f2;
+
       flex-shrink: 0;
     }
 
@@ -250,12 +375,15 @@
 
     .messageTop {
       display: flex;
+
       align-items: baseline;
+
       gap: 8px;
     }
 
     .messageUsername {
       font-weight: bold;
+
       cursor: pointer;
     }
 
@@ -265,43 +393,68 @@
 
     .timestamp {
       color: #949ba4;
+
       font-size: 11px;
     }
 
     .messageText {
       margin-top: 4px;
+
       color: #dbdee1;
+
       word-wrap: break-word;
+
+      white-space: pre-wrap;
     }
+
+
+    /* =========================
+       INPUT
+    ========================= */
 
     .chatInputArea {
       padding: 15px;
+
       background: #313338;
     }
 
     .chatForm {
       display: flex;
+
       gap: 10px;
     }
 
     #messageInput {
       flex: 1;
+
       background: #383a40;
+
       border: none;
+
       border-radius: 8px;
+
       padding: 14px;
+
       color: white;
+
       outline: none;
+
       font-size: 15px;
     }
 
     #sendButton {
       border: none;
+
       background: #5865f2;
+
       color: white;
+
       padding: 0 20px;
+
       border-radius: 8px;
+
       cursor: pointer;
+
       font-weight: bold;
     }
 
@@ -309,41 +462,71 @@
       background: #4752c4;
     }
 
-    /* PROFILE MODAL */
+
+    /* =========================
+       PROFILE MODAL
+    ========================= */
 
     #profileModal {
       display: none;
+
       position: fixed;
+
       inset: 0;
-      background: rgba(0,0,0,.75);
+
+      background:
+        rgba(0,0,0,.75);
+
       z-index: 100;
+
       justify-content: center;
+
       align-items: center;
+
       padding: 20px;
+
       overflow-y: auto;
     }
 
     .profileEditor {
       width: 100%;
+
       max-width: 850px;
+
       background: #1e1f22;
+
       border-radius: 15px;
+
       padding: 25px;
+
       display: grid;
-      grid-template-columns: 1fr 1fr;
+
+      grid-template-columns:
+        1fr 1fr;
+
       gap: 25px;
     }
 
     .profileEditor h2 {
       grid-column: 1 / -1;
+
       margin: 0;
     }
 
+
+    /* =========================
+       PROFILE FIELDS
+    ========================= */
+
     .editorFields label {
       display: block;
+
       color: #b5bac1;
+
       font-size: 13px;
+
       margin-top: 12px;
+
       margin-bottom: 5px;
     }
 
@@ -351,63 +534,93 @@
     .editorFields textarea,
     .editorFields select {
       width: 100%;
+
       padding: 11px;
+
       border-radius: 7px;
+
       border: none;
+
       background: #111214;
+
       color: white;
+
       outline: none;
     }
 
     .editorFields textarea {
       min-height: 80px;
+
       resize: vertical;
     }
 
     .colorRow {
       display: flex;
+
       gap: 10px;
+
       align-items: center;
     }
 
     #accentColor {
       width: 55px;
+
       height: 40px;
+
       padding: 2px;
     }
 
+
+    /* =========================
+       PROFILE PREVIEW
+    ========================= */
+
     .preview {
       border-radius: 12px;
+
       overflow: hidden;
+
       background: #313338;
+
       height: fit-content;
     }
 
     .previewBanner {
       height: 130px;
+
       background: #5865f2;
+
       background-size: cover;
+
       background-position: center;
     }
 
     .previewBody {
       padding: 20px;
+
       position: relative;
     }
 
     .previewAvatar {
       width: 80px;
       height: 80px;
+
       border-radius: 50%;
+
       object-fit: cover;
+
       background: #5865f2;
+
       border: 5px solid #313338;
+
       margin-top: -55px;
     }
 
     .previewName {
       font-size: 22px;
+
       font-weight: bold;
+
       margin-top: 8px;
     }
 
@@ -417,34 +630,51 @@
 
     .previewStatus {
       margin-top: 12px;
+
       color: #23a55a;
     }
 
     .previewBio {
       margin-top: 12px;
+
       color: #dbdee1;
+
       white-space: pre-wrap;
     }
 
     .previewEmoji {
       font-size: 30px;
+
       margin-top: 10px;
     }
 
+
+    /* =========================
+       PROFILE ACTIONS
+    ========================= */
+
     .profileActions {
       grid-column: 1 / -1;
+
       display: flex;
+
       justify-content: flex-end;
+
       gap: 10px;
     }
 
     .saveButton,
     .cancelButton {
       border: none;
+
       padding: 11px 18px;
+
       border-radius: 7px;
+
       color: white;
+
       cursor: pointer;
+
       font-weight: bold;
     }
 
@@ -456,7 +686,13 @@
       background: #4e5058;
     }
 
+
+    /* =========================
+       MOBILE
+    ========================= */
+
     @media (max-width: 750px) {
+
       .sidebar {
         width: 190px;
       }
@@ -469,29 +705,44 @@
       .profileActions {
         grid-column: auto;
       }
+
     }
+
   </style>
 </head>
 
 <body>
 
-  <!-- AUTH SCREEN -->
+
+  <!-- =========================
+       AUTH SCREEN
+  ========================= -->
 
   <div id="authScreen">
 
     <div class="authBox">
 
-      <h1 id="authTitle">Welcome Back</h1>
-      <p id="authSubtitle">Log in to your account</p>
+      <h1 id="authTitle">
+        Welcome Back
+      </h1>
 
-      <div id="usernameContainer" style="display:none;">
+      <p id="authSubtitle">
+        Log in to your account
+      </p>
+
+
+      <div id="usernameContainer"
+           style="display:none;">
+
         <input
           id="usernameInput"
           type="text"
           placeholder="Username"
           maxlength="32"
         >
+
       </div>
+
 
       <input
         id="emailInput"
@@ -499,22 +750,37 @@
         placeholder="Email"
       >
 
+
       <input
         id="passwordInput"
         type="password"
         placeholder="Password"
       >
 
-      <button class="authButton" id="authButton">
+
+      <button
+        class="authButton"
+        id="authButton"
+      >
         Log In
       </button>
 
+
       <p>
-        <span id="switchText">Don't have an account?</span>
-        <button class="switchButton" id="switchButton">
+
+        <span id="switchText">
+          Don't have an account?
+        </span>
+
+        <button
+          class="switchButton"
+          id="switchButton"
+        >
           Sign Up
         </button>
+
       </p>
+
 
       <div id="authMessage"></div>
 
@@ -523,11 +789,16 @@
   </div>
 
 
-  <!-- CHAT SCREEN -->
+  <!-- =========================
+       CHAT SCREEN
+  ========================= -->
 
   <div id="chatScreen">
 
     <div class="app">
+
+
+      <!-- SIDEBAR -->
 
       <aside class="sidebar">
 
@@ -535,47 +806,83 @@
           💬 My Chat
         </div>
 
+
         <div class="rooms">
 
-          <div class="room active">
+          <div
+            class="room active"
+            data-channel="general"
+          >
             💬 general
           </div>
 
-          <div class="room">
+
+          <div
+            class="room"
+            data-channel="gaming"
+          >
             🎮 gaming
           </div>
 
-          <div class="room">
+
+          <div
+            class="room"
+            data-channel="art"
+          >
             🎨 art
           </div>
 
-          <div class="room">
+
+          <div
+            class="room"
+            data-channel="memes"
+          >
             😂 memes
           </div>
 
         </div>
 
+
+        <!-- USER PANEL -->
+
         <div class="userPanel">
 
-          <div id="currentAvatar" class="smallAvatar">
+          <div
+            id="currentAvatar"
+            class="smallAvatar"
+          >
             👤
           </div>
 
+
           <div class="userInfo">
-            <div class="userName" id="currentUsername">
+
+            <div
+              class="userName"
+              id="currentUsername"
+            >
               User
             </div>
 
             <div class="userStatus">
               ● Online
             </div>
+
           </div>
 
-          <button class="profileButton" id="openProfile">
+
+          <button
+            class="profileButton"
+            id="openProfile"
+          >
             👤
           </button>
 
-          <button class="logoutButton" id="logoutButton">
+
+          <button
+            class="logoutButton"
+            id="logoutButton"
+          >
             ↪
           </button>
 
@@ -584,17 +891,27 @@
       </aside>
 
 
+      <!-- MAIN CHAT -->
+
       <main class="main">
 
-        <div class="chatHeader">
+        <div
+          class="chatHeader"
+          id="chatHeader"
+        >
           # general
         </div>
 
+
         <div id="messages"></div>
+
 
         <div class="chatInputArea">
 
-          <form class="chatForm" id="chatForm">
+          <form
+            class="chatForm"
+            id="chatForm"
+          >
 
             <input
               id="messageInput"
@@ -604,7 +921,11 @@
               maxlength="2000"
             >
 
-            <button id="sendButton" type="submit">
+
+            <button
+              id="sendButton"
+              type="submit"
+            >
               Send
             </button>
 
@@ -619,103 +940,232 @@
   </div>
 
 
-  <!-- PROFILE MODAL -->
+  <!-- =========================
+       PROFILE MODAL
+  ========================= -->
 
   <div id="profileModal">
 
     <div class="profileEditor">
 
-      <h2>Customize Your Profile ✨</h2>
+      <h2>
+        Customize Your Profile ✨
+      </h2>
+
 
       <div class="editorFields">
 
-        <label>Display Name</label>
-        <input id="displayNameInput" maxlength="32">
 
-        <label>Username</label>
-        <input id="profileUsernameInput" maxlength="32">
+        <!-- DISPLAY NAME -->
 
-        <label>Profile Picture URL</label>
+        <label>
+          Display Name
+        </label>
+
+        <input
+          id="displayNameInput"
+          maxlength="32"
+          placeholder="Your display name"
+        >
+
+
+        <!-- USERNAME -->
+
+        <label>
+          Username
+        </label>
+
+        <input
+          id="profileUsernameInput"
+          maxlength="32"
+          placeholder="username"
+        >
+
+
+        <!-- PROFILE PICTURE -->
+
+        <label>
+          Profile Picture URL
+        </label>
+
         <input
           id="avatarInput"
           placeholder="https://example.com/image.png"
         >
 
-        <label>Banner URL</label>
+
+        <!-- BANNER -->
+
+        <label>
+          Banner URL
+        </label>
+
         <input
           id="bannerInput"
           placeholder="https://example.com/banner.png"
         >
 
-        <label>Bio</label>
+
+        <!-- BIO -->
+
+        <label>
+          Bio
+        </label>
+
         <textarea
           id="bioInput"
           maxlength="190"
           placeholder="Tell people about yourself..."
         ></textarea>
 
-        <label>Custom Status</label>
+
+        <!-- STATUS -->
+
+        <label>
+          Custom Status
+        </label>
+
         <input
           id="customStatusInput"
           maxlength="100"
           placeholder="What are you doing?"
         >
 
-        <label>Favorite Emoji</label>
+
+        <!-- EMOJI -->
+
+        <label>
+          Favorite Emoji
+        </label>
+
         <input
           id="emojiInput"
           maxlength="4"
           placeholder="😀"
         >
 
-        <label>Accent Color</label>
+
+        <!-- COLOR -->
+
+        <label>
+          Accent Color
+        </label>
 
         <div class="colorRow">
-          <input id="accentColor" type="color" value="#5865F2">
-          <span id="colorText">#5865F2</span>
+
+          <input
+            id="accentColor"
+            type="color"
+            value="#5865F2"
+          >
+
+          <span id="colorText">
+            #5865F2
+          </span>
+
         </div>
 
-        <label>Website</label>
+
+        <!-- WEBSITE -->
+
+        <label>
+          Website
+        </label>
+
         <input
           id="websiteInput"
           placeholder="https://..."
         >
 
-        <label>Social Link</label>
+
+        <!-- SOCIAL -->
+
+        <label>
+          Social Link
+        </label>
+
         <input
           id="socialInput"
           placeholder="https://..."
         >
 
-        <label>Profile Decoration</label>
+
+        <!-- DECORATION -->
+
+        <label>
+          Profile Decoration
+        </label>
 
         <select id="decorationInput">
-          <option value="">None</option>
-          <option value="✨ Sparkles">✨ Sparkles</option>
-          <option value="⭐ Stars">⭐ Stars</option>
-          <option value="🌈 Rainbow">🌈 Rainbow</option>
-          <option value="💫 Cosmic">💫 Cosmic</option>
-          <option value="🔥 Fire">🔥 Fire</option>
+
+          <option value="">
+            None
+          </option>
+
+          <option value="✨ Sparkles">
+            ✨ Sparkles
+          </option>
+
+          <option value="⭐ Stars">
+            ⭐ Stars
+          </option>
+
+          <option value="🌈 Rainbow">
+            🌈 Rainbow
+          </option>
+
+          <option value="💫 Cosmic">
+            💫 Cosmic
+          </option>
+
+          <option value="🔥 Fire">
+            🔥 Fire
+          </option>
+
         </select>
 
-        <label>Profile Effect</label>
+
+        <!-- EFFECT -->
+
+        <label>
+          Profile Effect
+        </label>
 
         <select id="effectInput">
-          <option value="">None</option>
-          <option value="glow">Glow</option>
-          <option value="shadow">Shadow</option>
-          <option value="glass">Glass</option>
+
+          <option value="">
+            None
+          </option>
+
+          <option value="glow">
+            Glow
+          </option>
+
+          <option value="shadow">
+            Shadow
+          </option>
+
+          <option value="glass">
+            Glass
+          </option>
+
         </select>
 
       </div>
 
 
-      <div class="preview" id="profilePreview">
+      <!-- PROFILE PREVIEW -->
+
+      <div
+        class="preview"
+        id="profilePreview"
+      >
 
         <div
           class="previewBanner"
           id="previewBanner"
         ></div>
+
 
         <div class="previewBody">
 
@@ -726,12 +1176,14 @@
             alt=""
           >
 
+
           <div
             class="previewName"
             id="previewName"
           >
             New User
           </div>
+
 
           <div
             class="previewUsername"
@@ -740,12 +1192,14 @@
             @username
           </div>
 
+
           <div
             class="previewStatus"
             id="previewStatus"
           >
             ● Online
           </div>
+
 
           <div
             class="previewBio"
@@ -754,12 +1208,14 @@
             Your bio will appear here.
           </div>
 
+
           <div
             class="previewEmoji"
             id="previewEmoji"
           >
             😀
           </div>
+
 
           <div
             id="previewDecoration"
@@ -771,6 +1227,8 @@
       </div>
 
 
+      <!-- ACTIONS -->
+
       <div class="profileActions">
 
         <button
@@ -779,6 +1237,7 @@
         >
           Cancel
         </button>
+
 
         <button
           class="saveButton"
@@ -806,6 +1265,7 @@
     const SUPABASE_KEY =
       "sb_publishable_f-OuNvj9jXyjcL0sZ3awvg__HZ3S_Ry";
 
+
     const supabaseClient =
       window.supabase.createClient(
         SUPABASE_URL,
@@ -826,8 +1286,12 @@
     ========================= */
 
     let loggedInUser = null;
+
     let currentProfile = null;
+
     let authMode = "login";
+
+    let currentChannel = "general";
 
 
     /* =========================
@@ -835,217 +1299,335 @@
     ========================= */
 
     const authScreen =
-      document.getElementById("authScreen");
+      document.getElementById(
+        "authScreen"
+      );
 
     const chatScreen =
-      document.getElementById("chatScreen");
+      document.getElementById(
+        "chatScreen"
+      );
 
     const authTitle =
-      document.getElementById("authTitle");
+      document.getElementById(
+        "authTitle"
+      );
 
     const authSubtitle =
-      document.getElementById("authSubtitle");
+      document.getElementById(
+        "authSubtitle"
+      );
 
     const usernameContainer =
-      document.getElementById("usernameContainer");
+      document.getElementById(
+        "usernameContainer"
+      );
 
     const usernameInput =
-      document.getElementById("usernameInput");
+      document.getElementById(
+        "usernameInput"
+      );
 
     const emailInput =
-      document.getElementById("emailInput");
+      document.getElementById(
+        "emailInput"
+      );
 
     const passwordInput =
-      document.getElementById("passwordInput");
+      document.getElementById(
+        "passwordInput"
+      );
 
     const authButton =
-      document.getElementById("authButton");
+      document.getElementById(
+        "authButton"
+      );
 
     const switchButton =
-      document.getElementById("switchButton");
+      document.getElementById(
+        "switchButton"
+      );
 
     const switchText =
-      document.getElementById("switchText");
+      document.getElementById(
+        "switchText"
+      );
 
     const authMessage =
-      document.getElementById("authMessage");
+      document.getElementById(
+        "authMessage"
+      );
 
     const messages =
-      document.getElementById("messages");
+      document.getElementById(
+        "messages"
+      );
 
     const messageInput =
-      document.getElementById("messageInput");
+      document.getElementById(
+        "messageInput"
+      );
 
     const chatForm =
-      document.getElementById("chatForm");
+      document.getElementById(
+        "chatForm"
+      );
 
     const currentUsername =
-      document.getElementById("currentUsername");
+      document.getElementById(
+        "currentUsername"
+      );
 
     const currentAvatar =
-      document.getElementById("currentAvatar");
+      document.getElementById(
+        "currentAvatar"
+      );
+
+    const chatHeader =
+      document.getElementById(
+        "chatHeader"
+      );
 
 
     /* =========================
-       AUTH MODE
+       AUTH SWITCH
     ========================= */
 
-    switchButton.addEventListener("click", () => {
+    switchButton.addEventListener(
+      "click",
+      () => {
 
-      if (authMode === "login") {
+        if (authMode === "login") {
 
-        authMode = "signup";
+          authMode = "signup";
 
-        authTitle.textContent = "Create Account";
-        authSubtitle.textContent = "Make your new account";
-        usernameContainer.style.display = "block";
-        authButton.textContent = "Sign Up";
-        switchText.textContent = "Already have an account?";
-        switchButton.textContent = "Log In";
+          authTitle.textContent =
+            "Create Account";
 
-      } else {
+          authSubtitle.textContent =
+            "Make your new account";
 
-        authMode = "login";
+          usernameContainer.style.display =
+            "block";
 
-        authTitle.textContent = "Welcome Back";
-        authSubtitle.textContent = "Log in to your account";
-        usernameContainer.style.display = "none";
-        authButton.textContent = "Log In";
-        switchText.textContent = "Don't have an account?";
-        switchButton.textContent = "Sign Up";
+          authButton.textContent =
+            "Sign Up";
+
+          switchText.textContent =
+            "Already have an account?";
+
+          switchButton.textContent =
+            "Log In";
+
+        }
+
+        else {
+
+          authMode = "login";
+
+          authTitle.textContent =
+            "Welcome Back";
+
+          authSubtitle.textContent =
+            "Log in to your account";
+
+          usernameContainer.style.display =
+            "none";
+
+          authButton.textContent =
+            "Log In";
+
+          switchText.textContent =
+            "Don't have an account?";
+
+          switchButton.textContent =
+            "Sign Up";
+
+        }
+
+        authMessage.textContent = "";
 
       }
-
-      authMessage.textContent = "";
-
-    });
+    );
 
 
     /* =========================
-       AUTH BUTTON
+       AUTH
     ========================= */
 
-    authButton.addEventListener("click", async () => {
+    authButton.addEventListener(
+      "click",
+      async () => {
 
-      authMessage.textContent = "";
+        authMessage.textContent = "";
 
-      const email =
-        emailInput.value.trim();
+        const email =
+          emailInput.value.trim();
 
-      const password =
-        passwordInput.value;
-
-      if (!email || !password) {
-        authMessage.textContent =
-          "Please enter your email and password.";
-        return;
-      }
+        const password =
+          passwordInput.value;
 
 
-      /* SIGN UP */
+        if (!email || !password) {
 
-      if (authMode === "signup") {
-
-        const username =
-          usernameInput.value.trim();
-
-        if (!username) {
           authMessage.textContent =
-            "Please choose a username.";
-          return;
-        }
+            "Please enter your email and password.";
 
-        if (username.length < 3) {
-          authMessage.textContent =
-            "Username must be at least 3 characters.";
           return;
+
         }
 
 
-        const { data, error } =
-          await supabaseClient.auth.signUp({
-            email,
-            password
-          });
+        /* SIGN UP */
+
+        if (authMode === "signup") {
+
+          const username =
+            usernameInput.value.trim();
 
 
-        if (error) {
-          authMessage.textContent =
-            error.message;
-          return;
-        }
+          if (!username) {
+
+            authMessage.textContent =
+              "Please choose a username.";
+
+            return;
+
+          }
 
 
-        if (!data.user) {
-          authMessage.textContent =
-            "Account could not be created.";
-          return;
-        }
+          if (username.length < 3) {
+
+            authMessage.textContent =
+              "Username must be at least 3 characters.";
+
+            return;
+
+          }
 
 
-        const { error: profileError } =
-          await supabaseClient
-            .from("profiles")
-            .insert({
-              id: data.user.id,
-              username: username,
-              display_name: username
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth.signUp({
+              email,
+              password
             });
 
 
-        if (profileError) {
-          authMessage.textContent =
-            profileError.message;
-          return;
+          if (error) {
+
+            authMessage.textContent =
+              error.message;
+
+            return;
+
+          }
+
+
+          if (!data.user) {
+
+            authMessage.textContent =
+              "Account could not be created.";
+
+            return;
+
+          }
+
+
+          const {
+            error: profileError
+          } =
+            await supabaseClient
+              .from("profiles")
+              .insert({
+
+                id: data.user.id,
+
+                username:
+                  username,
+
+                display_name:
+                  username
+
+              });
+
+
+          if (profileError) {
+
+            authMessage.textContent =
+              profileError.message;
+
+            return;
+
+          }
+
+
+          loggedInUser =
+            data.user;
+
+
+          await loadProfile();
+
+          showChat();
+
         }
 
 
-        loggedInUser = data.user;
+        /* LOGIN */
 
-        await loadProfile();
+        else {
 
-        showChat();
+          const {
+            data,
+            error
+          } =
+            await supabaseClient.auth
+              .signInWithPassword({
 
-      }
+                email,
+                password
 
-
-      /* LOGIN */
-
-      else {
-
-        const { data, error } =
-          await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
+              });
 
 
-        if (error) {
-          authMessage.textContent =
-            error.message;
-          return;
+          if (error) {
+
+            authMessage.textContent =
+              error.message;
+
+            return;
+
+          }
+
+
+          loggedInUser =
+            data.user;
+
+
+          await loadProfile();
+
+          showChat();
+
         }
 
-
-        loggedInUser = data.user;
-
-        await loadProfile();
-
-        showChat();
-
       }
-
-    });
+    );
 
 
     /* =========================
-       CHECK EXISTING SESSION
+       SESSION
     ========================= */
 
     async function checkSession() {
 
-      const { data } =
-        await supabaseClient.auth.getSession();
+      const {
+        data
+      } =
+        await supabaseClient.auth
+          .getSession();
+
 
       if (data.session) {
 
@@ -1060,6 +1642,7 @@
 
     }
 
+
     checkSession();
 
 
@@ -1072,51 +1655,67 @@
       if (!loggedInUser) return;
 
 
-      let { data, error } =
+      let {
+        data,
+        error
+      } =
         await supabaseClient
           .from("profiles")
           .select("*")
-          .eq("id", loggedInUser.id)
+          .eq(
+            "id",
+            loggedInUser.id
+          )
           .maybeSingle();
 
 
       if (error) {
+
         console.error(
           "Profile loading error:",
           error
         );
+
       }
 
-
-      /* If the profile somehow doesn't exist,
-         create one automatically. */
 
       if (!data) {
 
         const fallbackUsername =
           loggedInUser.email
-            ? loggedInUser.email.split("@")[0]
+            ? loggedInUser.email
+                .split("@")[0]
             : "User";
 
 
-        const { data: newProfile } =
+        const result =
           await supabaseClient
             .from("profiles")
             .insert({
-              id: loggedInUser.id,
-              username: fallbackUsername,
-              display_name: fallbackUsername
+
+              id:
+                loggedInUser.id,
+
+              username:
+                fallbackUsername,
+
+              display_name:
+                fallbackUsername
+
             })
             .select()
             .single();
 
 
-        data = newProfile;
+        data =
+          result.data;
 
       }
 
 
-      currentProfile = data;
+      currentProfile =
+        data;
+
 
       updateCurrentUserUI();
 
@@ -1138,30 +1737,53 @@
         "User";
 
 
-      const username =
-        currentProfile.username ||
-        "user";
-
-
       currentUsername.textContent =
         displayName;
 
 
       if (currentProfile.avatar_url) {
 
-        currentAvatar.outerHTML = `
-          <img
-            id="currentAvatar"
-            class="smallAvatar"
-            src="${escapeHtml(currentProfile.avatar_url)}"
-            alt=""
-          >
-        `;
+        const oldAvatar =
+          document.getElementById(
+            "currentAvatar"
+          );
 
-      } else {
 
-        currentAvatar.textContent =
-          (displayName[0] || "U").toUpperCase();
+        const newAvatar =
+          document.createElement("img");
+
+
+        newAvatar.id =
+          "currentAvatar";
+
+        newAvatar.className =
+          "smallAvatar";
+
+        newAvatar.src =
+          currentProfile.avatar_url;
+
+        newAvatar.alt = "";
+
+
+        oldAvatar.replaceWith(
+          newAvatar
+        );
+
+      }
+
+      else {
+
+        const avatar =
+          document.getElementById(
+            "currentAvatar"
+          );
+
+
+        avatar.textContent =
+          (
+            displayName[0] ||
+            "U"
+          ).toUpperCase();
 
       }
 
@@ -1180,7 +1802,14 @@
       chatScreen.style.display =
         "block";
 
+
       updateCurrentUserUI();
+
+
+      joinChannel(
+        currentChannel
+      );
+
 
       messageInput.focus();
 
@@ -1188,125 +1817,229 @@
 
 
     /* =========================
-       LOGOUT
+       CHANNEL SYSTEM
     ========================= */
 
     document
-      .getElementById("logoutButton")
-      .addEventListener("click", async () => {
+      .querySelectorAll(".room")
+      .forEach(room => {
 
-        await supabaseClient.auth.signOut();
+        room.addEventListener(
+          "click",
+          () => {
 
-        loggedInUser = null;
-        currentProfile = null;
+            const channel =
+              room.dataset.channel;
 
-        chatScreen.style.display =
-          "none";
+            joinChannel(
+              channel
+            );
 
-        authScreen.style.display =
-          "flex";
+          }
 
-        emailInput.value = "";
-        passwordInput.value = "";
-        usernameInput.value = "";
+        );
 
       });
+
+
+    function joinChannel(channel) {
+
+      currentChannel =
+        channel;
+
+
+      /* Tell server to move us */
+
+      socket.emit(
+        "join channel",
+        channel
+      );
+
+
+      /* Update buttons */
+
+      document
+        .querySelectorAll(".room")
+        .forEach(room => {
+
+          room.classList.toggle(
+            "active",
+            room.dataset.channel ===
+              channel
+          );
+
+        });
+
+
+      /* Update header */
+
+      chatHeader.textContent =
+        "# " + channel;
+
+
+      /* Update input */
+
+      messageInput.placeholder =
+        "Message #" + channel;
+
+
+      /* Clear messages */
+
+      messages.innerHTML = "";
+
+    }
 
 
     /* =========================
        SEND MESSAGE
     ========================= */
 
-    chatForm.addEventListener("submit", (event) => {
+    chatForm.addEventListener(
+      "submit",
+      event => {
 
-      event.preventDefault();
+        event.preventDefault();
 
-      const text =
-        messageInput.value.trim();
 
-      if (!text || !loggedInUser || !currentProfile) {
-        return;
+        const text =
+          messageInput.value.trim();
+
+
+        if (
+          !text ||
+          !loggedInUser ||
+          !currentProfile
+        ) {
+
+          return;
+
+        }
+
+
+        socket.emit(
+          "chat message",
+          {
+
+            text:
+
+              text,
+
+
+            userId:
+
+              loggedInUser.id,
+
+
+            username:
+
+              currentProfile.username ||
+              "user",
+
+
+            displayName:
+
+              currentProfile.display_name ||
+              currentProfile.username ||
+              "User",
+
+
+            avatar:
+
+              currentProfile.avatar_url ||
+              "",
+
+
+            timestamp:
+
+              new Date().toISOString(),
+
+
+            channel:
+
+              currentChannel
+
+          }
+        );
+
+
+        messageInput.value = "";
+
       }
-
-
-      /*
-        IMPORTANT:
-
-        Before, this was sending the user's email.
-
-        Now it sends the profile username,
-        display name, and profile picture.
-      */
-
-      socket.emit("chat message", {
-
-        text: text,
-
-        userId: loggedInUser.id,
-
-        username:
-          currentProfile.username ||
-          "user",
-
-        displayName:
-          currentProfile.display_name ||
-          currentProfile.username ||
-          "User",
-
-        avatar:
-          currentProfile.avatar_url ||
-          "",
-
-        timestamp:
-          new Date().toISOString()
-
-      });
-
-
-      messageInput.value = "";
-
-    });
+    );
 
 
     /* =========================
        RECEIVE MESSAGE
     ========================= */
 
-    socket.on("chat message", (message) => {
+    socket.on(
+      "chat message",
+      message => {
 
-      addMessage(message);
+        /*
+          Extra safety:
+          only display messages
+          belonging to the current
+          channel.
+        */
 
-    });
+        if (
+          message.channel &&
+          message.channel !==
+            currentChannel
+        ) {
+
+          return;
+
+        }
+
+
+        addMessage(
+          message
+        );
+
+      }
+    );
 
 
     /* =========================
-       DISPLAY MESSAGE
+       ADD MESSAGE
     ========================= */
 
     function addMessage(message) {
 
       const messageElement =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       messageElement.className =
         "message";
 
 
-      /* Avatar */
+      /* AVATAR */
 
       let avatarHTML = "";
+
 
       if (message.avatar) {
 
         avatarHTML = `
+
           <img
             class="messageAvatar"
-            src="${escapeHtml(message.avatar)}"
+            src="${escapeHtml(
+              message.avatar
+            )}"
             alt=""
           >
+
         `;
 
-      } else {
+      }
+
+      else {
 
         const firstLetter =
           (
@@ -1317,22 +2050,28 @@
 
 
         avatarHTML = `
-          <div class="messageAvatar"
-               style="
-                 display:flex;
-                 align-items:center;
-                 justify-content:center;
-                 font-weight:bold;
-                 background:#5865F2;
-               ">
-            ${escapeHtml(firstLetter)}
+
+          <div
+            class="messageAvatar"
+            style="
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              font-weight:bold;
+              background:#5865F2;
+            "
+          >
+            ${escapeHtml(
+              firstLetter
+            )}
           </div>
+
         `;
 
       }
 
 
-      /* Username */
+      /* DISPLAY NAME */
 
       const name =
         message.displayName ||
@@ -1340,20 +2079,27 @@
         "User";
 
 
-      /* Time */
+      /* TIMESTAMP */
 
       let time = "";
+
 
       if (message.timestamp) {
 
         const date =
-          new Date(message.timestamp);
+          new Date(
+            message.timestamp
+          );
+
 
         time =
-          date.toLocaleTimeString([], {
-            hour: "numeric",
-            minute: "2-digit"
-          });
+          date.toLocaleTimeString(
+            [],
+            {
+              hour: "numeric",
+              minute: "2-digit"
+            }
+          );
 
       }
 
@@ -1362,27 +2108,46 @@
 
         ${avatarHTML}
 
-        <div class="messageContent">
 
-          <div class="messageTop">
+        <div
+          class="messageContent"
+        >
+
+          <div
+            class="messageTop"
+          >
 
             <span
               class="messageUsername"
               title="@${escapeHtml(
-                message.username || "user"
+                message.username ||
+                "user"
               )}"
             >
-              ${escapeHtml(name)}
+              ${escapeHtml(
+                name
+              )}
             </span>
 
-            <span class="timestamp">
-              ${escapeHtml(time)}
+
+            <span
+              class="timestamp"
+            >
+              ${escapeHtml(
+                time
+              )}
             </span>
 
           </div>
 
-          <div class="messageText">
-            ${escapeHtml(message.text || "")}
+
+          <div
+            class="messageText"
+          >
+            ${escapeHtml(
+              message.text ||
+              ""
+            )}
           </div>
 
         </div>
@@ -1402,33 +2167,86 @@
 
 
     /* =========================
+       LOGOUT
+    ========================= */
+
+    document
+      .getElementById(
+        "logoutButton"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          await supabaseClient.auth
+            .signOut();
+
+
+          loggedInUser = null;
+
+          currentProfile = null;
+
+
+          chatScreen.style.display =
+            "none";
+
+          authScreen.style.display =
+            "flex";
+
+
+          emailInput.value = "";
+
+          passwordInput.value = "";
+
+          usernameInput.value = "";
+
+          messages.innerHTML = "";
+
+        }
+      );
+
+
+    /* =========================
        PROFILE MODAL
     ========================= */
 
     const profileModal =
-      document.getElementById("profileModal");
-
-    document
-      .getElementById("openProfile")
-      .addEventListener("click", () => {
-
-        openProfileEditor();
-
-      });
+      document.getElementById(
+        "profileModal"
+      );
 
 
     document
-      .getElementById("closeProfile")
-      .addEventListener("click", () => {
+      .getElementById(
+        "openProfile"
+      )
+      .addEventListener(
+        "click",
+        () => {
 
-        profileModal.style.display =
-          "none";
+          openProfileEditor();
 
-      });
+        }
+      );
+
+
+    document
+      .getElementById(
+        "closeProfile"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          profileModal.style.display =
+            "none";
+
+        }
+      );
 
 
     /* =========================
-       PROFILE ELEMENTS
+       PROFILE INPUTS
     ========================= */
 
     const displayNameInput =
@@ -1436,55 +2254,66 @@
         "displayNameInput"
       );
 
+
     const profileUsernameInput =
       document.getElementById(
         "profileUsernameInput"
       );
+
 
     const avatarInput =
       document.getElementById(
         "avatarInput"
       );
 
+
     const bannerInput =
       document.getElementById(
         "bannerInput"
       );
+
 
     const bioInput =
       document.getElementById(
         "bioInput"
       );
 
+
     const customStatusInput =
       document.getElementById(
         "customStatusInput"
       );
+
 
     const emojiInput =
       document.getElementById(
         "emojiInput"
       );
 
+
     const accentColor =
       document.getElementById(
         "accentColor"
       );
+
 
     const websiteInput =
       document.getElementById(
         "websiteInput"
       );
 
+
     const socialInput =
       document.getElementById(
         "socialInput"
       );
 
+
     const decorationInput =
       document.getElementById(
         "decorationInput"
       );
+
 
     const effectInput =
       document.getElementById(
@@ -1493,40 +2322,49 @@
 
 
     /* =========================
-       OPEN PROFILE EDITOR
+       OPEN PROFILE
     ========================= */
 
     function openProfileEditor() {
 
-      if (!currentProfile) return;
+      if (!currentProfile) {
+        return;
+      }
 
 
       displayNameInput.value =
-        currentProfile.display_name || "";
+        currentProfile.display_name ||
+        "";
 
 
       profileUsernameInput.value =
-        currentProfile.username || "";
+        currentProfile.username ||
+        "";
 
 
       avatarInput.value =
-        currentProfile.avatar_url || "";
+        currentProfile.avatar_url ||
+        "";
 
 
       bannerInput.value =
-        currentProfile.banner_url || "";
+        currentProfile.banner_url ||
+        "";
 
 
       bioInput.value =
-        currentProfile.bio || "";
+        currentProfile.bio ||
+        "";
 
 
       customStatusInput.value =
-        currentProfile.custom_status || "";
+        currentProfile.custom_status ||
+        "";
 
 
       emojiInput.value =
-        currentProfile.favorite_emoji || "😀";
+        currentProfile.favorite_emoji ||
+        "😀";
 
 
       accentColor.value =
@@ -1535,19 +2373,23 @@
 
 
       websiteInput.value =
-        currentProfile.website_url || "";
+        currentProfile.website_url ||
+        "";
 
 
       socialInput.value =
-        currentProfile.social_url || "";
+        currentProfile.social_url ||
+        "";
 
 
       decorationInput.value =
-        currentProfile.profile_decoration || "";
+        currentProfile.profile_decoration ||
+        "";
 
 
       effectInput.value =
-        currentProfile.profile_effect || "";
+        currentProfile.profile_effect ||
+        "";
 
 
       updatePreview();
@@ -1560,7 +2402,7 @@
 
 
     /* =========================
-       LIVE PROFILE PREVIEW
+       PREVIEW
     ========================= */
 
     const previewName =
@@ -1568,40 +2410,48 @@
         "previewName"
       );
 
+
     const previewUsername =
       document.getElementById(
         "previewUsername"
       );
+
 
     const previewAvatar =
       document.getElementById(
         "previewAvatar"
       );
 
+
     const previewBanner =
       document.getElementById(
         "previewBanner"
       );
+
 
     const previewBio =
       document.getElementById(
         "previewBio"
       );
 
+
     const previewStatus =
       document.getElementById(
         "previewStatus"
       );
+
 
     const previewEmoji =
       document.getElementById(
         "previewEmoji"
       );
 
+
     const previewDecoration =
       document.getElementById(
         "previewDecoration"
       );
+
 
     const colorText =
       document.getElementById(
@@ -1615,27 +2465,34 @@
         displayNameInput.value ||
         "New User";
 
+
       const username =
         profileUsernameInput.value ||
         "username";
 
+
       const avatar =
         avatarInput.value;
 
+
       const banner =
         bannerInput.value;
+
 
       const bio =
         bioInput.value ||
         "Your bio will appear here.";
 
+
       const status =
         customStatusInput.value ||
         "Online";
 
+
       const emoji =
         emojiInput.value ||
         "😀";
+
 
       const color =
         accentColor.value ||
@@ -1645,17 +2502,22 @@
       previewName.textContent =
         name;
 
+
       previewUsername.textContent =
         "@" + username;
+
 
       previewBio.textContent =
         bio;
 
+
       previewStatus.textContent =
         "● " + status;
 
+
       previewEmoji.textContent =
         emoji;
+
 
       colorText.textContent =
         color;
@@ -1670,7 +2532,9 @@
         previewBanner.style.backgroundImage =
           `url("${banner}")`;
 
-      } else {
+      }
+
+      else {
 
         previewBanner.style.backgroundImage =
           "none";
@@ -1683,7 +2547,9 @@
         previewAvatar.src =
           avatar;
 
-      } else {
+      }
+
+      else {
 
         previewAvatar.src =
           "https://via.placeholder.com/100";
@@ -1695,19 +2561,24 @@
         decorationInput.value;
 
 
-      /* Profile effects */
-
       const preview =
         document.getElementById(
           "profilePreview"
         );
 
 
-      preview.style.boxShadow = "none";
-      preview.style.backdropFilter = "none";
+      preview.style.boxShadow =
+        "none";
 
 
-      if (effectInput.value === "glow") {
+      preview.style.backdropFilter =
+        "none";
+
+
+      if (
+        effectInput.value ===
+        "glow"
+      ) {
 
         preview.style.boxShadow =
           `0 0 25px ${color}`;
@@ -1715,7 +2586,10 @@
       }
 
 
-      if (effectInput.value === "shadow") {
+      if (
+        effectInput.value ===
+        "shadow"
+      ) {
 
         preview.style.boxShadow =
           "0 20px 50px rgba(0,0,0,.7)";
@@ -1723,7 +2597,10 @@
       }
 
 
-      if (effectInput.value === "glass") {
+      if (
+        effectInput.value ===
+        "glass"
+      ) {
 
         preview.style.backdropFilter =
           "blur(15px)";
@@ -1746,19 +2623,21 @@
       socialInput,
       decorationInput,
       effectInput
-    ].forEach(element => {
+    ].forEach(
+      element => {
 
-      element.addEventListener(
-        "input",
-        updatePreview
-      );
+        element.addEventListener(
+          "input",
+          updatePreview
+        );
 
-      element.addEventListener(
-        "change",
-        updatePreview
-      );
+        element.addEventListener(
+          "change",
+          updatePreview
+        );
 
-    });
+      }
+    );
 
 
     /* =========================
@@ -1766,143 +2645,164 @@
     ========================= */
 
     document
-      .getElementById("saveProfile")
-      .addEventListener("click", async () => {
+      .getElementById(
+        "saveProfile"
+      )
+      .addEventListener(
+        "click",
+        async () => {
 
-        if (!loggedInUser) return;
-
-
-        const username =
-          profileUsernameInput.value.trim();
-
-
-        const displayName =
-          displayNameInput.value.trim();
+          if (!loggedInUser) {
+            return;
+          }
 
 
-        if (!username) {
+          const username =
+            profileUsernameInput.value
+              .trim();
+
+
+          const displayName =
+            displayNameInput.value
+              .trim();
+
+
+          if (!username) {
+
+            alert(
+              "Please enter a username."
+            );
+
+            return;
+
+          }
+
+
+          if (!displayName) {
+
+            alert(
+              "Please enter a display name."
+            );
+
+            return;
+
+          }
+
+
+          const updateData = {
+
+            username:
+              username,
+
+            display_name:
+              displayName,
+
+            bio:
+              bioInput.value.trim(),
+
+            avatar_url:
+              avatarInput.value.trim(),
+
+            banner_url:
+              bannerInput.value.trim(),
+
+            accent_color:
+              accentColor.value,
+
+            custom_status:
+              customStatusInput.value.trim(),
+
+            favorite_emoji:
+              emojiInput.value.trim() ||
+              "😀",
+
+            website_url:
+              websiteInput.value.trim(),
+
+            social_url:
+              socialInput.value.trim(),
+
+            profile_decoration:
+              decorationInput.value,
+
+            profile_effect:
+              effectInput.value,
+
+            updated_at:
+              new Date().toISOString()
+
+          };
+
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient
+              .from("profiles")
+              .update(
+                updateData
+              )
+              .eq(
+                "id",
+                loggedInUser.id
+              )
+              .select()
+              .single();
+
+
+          if (error) {
+
+            alert(
+              "Could not save profile:\n" +
+              error.message
+            );
+
+            console.error(
+              error
+            );
+
+            return;
+
+          }
+
+
+          currentProfile =
+            data;
+
+
+          updateCurrentUserUI();
+
+
+          profileModal.style.display =
+            "none";
+
 
           alert(
-            "Please enter a username."
+            "Profile saved! 🎉"
           );
 
-          return;
-
         }
-
-
-        if (!displayName) {
-
-          alert(
-            "Please enter a display name."
-          );
-
-          return;
-
-        }
-
-
-        const updateData = {
-
-          username:
-            username,
-
-          display_name:
-            displayName,
-
-          bio:
-            bioInput.value.trim(),
-
-          avatar_url:
-            avatarInput.value.trim(),
-
-          banner_url:
-            bannerInput.value.trim(),
-
-          accent_color:
-            accentColor.value,
-
-          custom_status:
-            customStatusInput.value.trim(),
-
-          favorite_emoji:
-            emojiInput.value.trim() ||
-            "😀",
-
-          website_url:
-            websiteInput.value.trim(),
-
-          social_url:
-            socialInput.value.trim(),
-
-          profile_decoration:
-            decorationInput.value,
-
-          profile_effect:
-            effectInput.value,
-
-          updated_at:
-            new Date().toISOString()
-
-        };
-
-
-        const {
-          data,
-          error
-        } = await supabaseClient
-          .from("profiles")
-          .update(updateData)
-          .eq(
-            "id",
-            loggedInUser.id
-          )
-          .select()
-          .single();
-
-
-        if (error) {
-
-          alert(
-            "Could not save profile:\n" +
-            error.message
-          );
-
-          return;
-
-        }
-
-
-        currentProfile = data;
-
-
-        updateCurrentUserUI();
-
-
-        profileModal.style.display =
-          "none";
-
-
-        alert(
-          "Profile saved! 🎉"
-        );
-
-      });
+      );
 
 
     /* =========================
        ESCAPE HTML
-       Prevents messages from
-       inserting HTML into chat.
     ========================= */
 
     function escapeHtml(value) {
 
       const div =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       div.textContent =
-        String(value ?? "");
+        String(
+          value ?? ""
+        );
+
 
       return div.innerHTML;
 
