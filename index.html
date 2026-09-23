@@ -386,6 +386,191 @@
     }
 
     /* =========================
+       ANNOUNCEMENT POPUP
+    ========================= */
+
+    #announcementPopup {
+      position: fixed;
+
+      top: 20px;
+      left: 50%;
+
+      transform:
+        translateX(-50%)
+        translateY(-150px);
+
+      width: min(
+        600px,
+        calc(100vw - 40px)
+      );
+
+      background: #1e1f22;
+
+      border: 2px solid #5865f2;
+
+      border-radius: 14px;
+
+      padding: 16px 45px 16px 18px;
+
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      box-shadow:
+        0 10px 35px
+        rgba(0, 0, 0, 0.5);
+
+      z-index: 9999;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+    }
+
+    #announcementPopup.show {
+      transform:
+        translateX(-50%)
+        translateY(0);
+
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .announcementIcon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .announcementContent {
+      min-width: 0;
+    }
+
+    .announcementTitle {
+      font-size: 14px;
+      font-weight: bold;
+
+      color: #5865f2;
+
+      margin-bottom: 4px;
+    }
+
+    #announcementText {
+      color: white;
+      font-size: 15px;
+
+      word-wrap: break-word;
+    }
+
+    #closeAnnouncement {
+      position: absolute;
+
+      top: 8px;
+      right: 10px;
+
+      border: none;
+      background: transparent;
+
+      color: #b5bac1;
+
+      font-size: 24px;
+
+      cursor: pointer;
+    }
+
+    #closeAnnouncement:hover {
+      color: white;
+    }
+
+    /* =========================
+       MENTION NOTIFICATIONS
+    ========================= */
+
+    #mentionContainer {
+      position: fixed;
+
+      top: 20px;
+      right: 20px;
+
+      width: 330px;
+      max-width:
+        calc(100vw - 40px);
+
+      z-index: 10000;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 10px;
+    }
+
+    .mentionNotification {
+      background: #1e1f22;
+
+      border-left:
+        4px solid #5865f2;
+
+      border-radius: 10px;
+
+      padding: 14px;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.5);
+
+      cursor: pointer;
+
+      animation:
+        mentionSlideIn
+        0.2s ease;
+    }
+
+    .mentionNotification:hover {
+      background: #2b2d31;
+    }
+
+    .mentionTitle {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .mentionText {
+      color: #b5bac1;
+
+      font-size: 13px;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mentionChannel {
+      color: #949ba4;
+
+      font-size: 12px;
+
+      margin-top: 5px;
+    }
+
+    @keyframes mentionSlideIn {
+
+      from {
+        opacity: 0;
+        transform:
+          translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform:
+          translateX(0);
+      }
+
+    }
+
+    /* =========================
        PROFILE EDITOR
     ========================= */
 
@@ -731,6 +916,11 @@
         grid-column: auto;
       }
 
+      #mentionContainer {
+        right: 10px;
+        width: calc(100vw - 20px);
+      }
+
     }
 
   </style>
@@ -935,6 +1125,39 @@
     </div>
 
   </div>
+
+
+  <!-- ANNOUNCEMENT POPUP -->
+
+  <div id="announcementPopup">
+
+    <div class="announcementIcon">
+      📢
+    </div>
+
+    <div class="announcementContent">
+
+      <div class="announcementTitle">
+        Announcement
+      </div>
+
+      <div id="announcementText"></div>
+
+    </div>
+
+    <button
+      id="closeAnnouncement"
+      type="button"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <!-- MENTION NOTIFICATIONS -->
+
+  <div id="mentionContainer"></div>
 
 
   <!-- PROFILE EDITOR -->
@@ -1282,6 +1505,8 @@
     let authMode = "login";
     let currentChannel = "general";
 
+    let announcementTimeout;
+
 
     /* =========================
        ELEMENTS
@@ -1337,6 +1562,31 @@
 
     const chatHeader =
       document.getElementById("chatHeader");
+
+
+    /* =========================
+       ANNOUNCEMENT ELEMENTS
+    ========================= */
+
+    const announcementPopup =
+      document.getElementById(
+        "announcementPopup"
+      );
+
+    const announcementText =
+      document.getElementById(
+        "announcementText"
+      );
+
+    const closeAnnouncement =
+      document.getElementById(
+        "closeAnnouncement"
+      );
+
+    const mentionContainer =
+      document.getElementById(
+        "mentionContainer"
+      );
 
 
     /* =========================
@@ -1832,6 +2082,23 @@
 
       updateCurrentUserUI();
 
+
+      /*
+        Register this user with the
+        Socket.IO server so mentions
+        can find them.
+      */
+
+      if (loggedInUser) {
+
+        socket.emit(
+          "register user",
+          loggedInUser.id
+        );
+
+      }
+
+
       joinChannel(
         currentChannel
       );
@@ -1907,11 +2174,11 @@
 
     /* =========================
        SEND MESSAGE
-    ========================= */
+       ========================= */
 
     chatForm.addEventListener(
       "submit",
-      event => {
+      async event => {
 
         event.preventDefault();
 
@@ -1930,6 +2197,143 @@
 
         }
 
+
+        /* =========================
+           /ANNOUNCEMENT COMMAND
+        ========================= */
+
+        if (
+          text
+            .toLowerCase()
+            .startsWith(
+              "/announcement "
+            )
+        ) {
+
+          const announcementMessage =
+            text
+              .slice(
+                "/announcement ".length
+              )
+              .trim();
+
+
+          if (!announcementMessage) {
+
+            return;
+
+          }
+
+
+          socket.emit(
+            "announcement",
+            {
+              text:
+                announcementMessage
+            }
+          );
+
+
+          messageInput.value = "";
+
+          return;
+
+        }
+
+
+        /* =========================
+           FIND @MENTIONS
+        ========================= */
+
+        const mentionMatches =
+          text.match(
+            /@([a-zA-Z0-9_.-]+)/g
+          ) || [];
+
+
+        const mentionedUsernames =
+          [
+            ...new Set(
+              mentionMatches.map(
+                mention =>
+                  mention
+                    .slice(1)
+                    .toLowerCase()
+              )
+            )
+          ];
+
+
+        let mentionedUserIds = [];
+
+
+        /*
+          Look up each username using
+          case-insensitive matching.
+        */
+
+        if (
+          mentionedUsernames.length > 0
+        ) {
+
+          const profileResults =
+            await Promise.all(
+
+              mentionedUsernames.map(
+                async username => {
+
+                  const {
+                    data,
+                    error
+                  } =
+                    await supabaseClient
+                      .from("profiles")
+                      .select(
+                        "id, username"
+                      )
+                      .ilike(
+                        "username",
+                        username
+                      )
+                      .limit(1)
+                      .maybeSingle();
+
+
+                  if (
+                    error ||
+                    !data
+                  ) {
+
+                    return null;
+
+                  }
+
+
+                  return data;
+
+                }
+              )
+
+            );
+
+
+          mentionedUserIds =
+            profileResults
+              .filter(
+                profile =>
+                  profile !== null
+              )
+              .map(
+                profile =>
+                  profile.id
+              );
+
+        }
+
+
+        /* =========================
+           SEND MESSAGE
+        ========================= */
 
         socket.emit(
           "chat message",
@@ -1958,7 +2362,10 @@
               new Date().toISOString(),
 
             channel:
-              currentChannel
+              currentChannel,
+
+            mentionedUserIds:
+              mentionedUserIds
 
           }
         );
@@ -1991,6 +2398,165 @@
 
         addMessage(
           message
+        );
+
+      }
+    );
+
+
+    /* =========================
+       MENTION NOTIFICATION
+    ========================= */
+
+    socket.on(
+      "mention notification",
+      notification => {
+
+        showMentionNotification(
+          notification
+        );
+
+      }
+    );
+
+
+    function showMentionNotification(
+      notification
+    ) {
+
+      const notificationElement =
+        document.createElement(
+          "div"
+        );
+
+
+      notificationElement.className =
+        "mentionNotification";
+
+
+      const from =
+        notification.fromDisplayName ||
+        notification.fromUsername ||
+        "Someone";
+
+
+      const channel =
+        notification.channel ||
+        "general";
+
+
+      notificationElement.innerHTML = `
+
+        <div class="mentionTitle">
+          🔔 ${escapeHtml(from)}
+          mentioned you!
+        </div>
+
+        <div class="mentionText">
+          ${escapeHtml(
+            notification.message || ""
+          )}
+        </div>
+
+        <div class="mentionChannel">
+          #${escapeHtml(channel)}
+        </div>
+
+      `;
+
+
+      notificationElement.addEventListener(
+        "click",
+        () => {
+
+          joinChannel(
+            channel
+          );
+
+          notificationElement.remove();
+
+        }
+      );
+
+
+      mentionContainer.appendChild(
+        notificationElement
+      );
+
+
+      setTimeout(
+        () => {
+
+          notificationElement.remove();
+
+        },
+        7000
+      );
+
+    }
+
+
+    /* =========================
+       ANNOUNCEMENT NOTIFICATION
+    ========================= */
+
+    socket.on(
+      "announcement",
+      announcement => {
+
+        if (
+          !announcement ||
+          !announcement.text
+        ) {
+
+          return;
+
+        }
+
+
+        announcementText.textContent =
+          announcement.text;
+
+
+        announcementPopup.classList.add(
+          "show"
+        );
+
+
+        clearTimeout(
+          announcementTimeout
+        );
+
+
+        announcementTimeout =
+          setTimeout(
+            () => {
+
+              announcementPopup.classList.remove(
+                "show"
+              );
+
+            },
+            8000
+          );
+
+      }
+    );
+
+
+    /* CLOSE ANNOUNCEMENT */
+
+    closeAnnouncement.addEventListener(
+      "click",
+      () => {
+
+        announcementPopup.classList.remove(
+          "show"
+        );
+
+
+        clearTimeout(
+          announcementTimeout
         );
 
       }
@@ -2203,7 +2769,7 @@
 
     /* =========================
        PUBLIC USER PROFILE
-       ========================= */
+    ========================= */
 
     const userProfilePopup =
       document.getElementById(
@@ -2569,7 +3135,8 @@
       url
     ) {
 
-      let safeUrl = url.trim();
+      let safeUrl =
+        url.trim();
 
 
       if (
@@ -2612,7 +3179,7 @@
 
     /* =========================
        CLOSE PUBLIC PROFILE
-       ========================= */
+    ========================= */
 
     document
       .getElementById(
@@ -2629,7 +3196,7 @@
       );
 
 
-    /* Click outside popup */
+    /* CLICK OUTSIDE POPUP */
 
     document.addEventListener(
       "click",
@@ -2663,7 +3230,7 @@
     );
 
 
-    /* Escape key */
+    /* ESCAPE KEY */
 
     document.addEventListener(
       "keydown",
