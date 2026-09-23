@@ -30,18 +30,15 @@
       font-family: inherit;
     }
 
-
     /* =========================
        AUTH
     ========================= */
 
     #authScreen {
       min-height: 100vh;
-
       display: flex;
       justify-content: center;
       align-items: center;
-
       padding: 20px;
 
       background:
@@ -56,11 +53,8 @@
     .authBox {
       width: 100%;
       max-width: 430px;
-
       background: #1e1f22;
-
       padding: 35px;
-
       border-radius: 18px;
 
       box-shadow:
@@ -80,39 +74,30 @@
 
     .authBox input {
       width: 100%;
-
       padding: 14px;
-
       margin: 8px 0;
 
       border: none;
       border-radius: 8px;
 
       background: #111214;
-
       color: white;
-
       outline: none;
     }
 
     .authButton {
       width: 100%;
-
       padding: 14px;
-
       margin-top: 12px;
 
       border: none;
       border-radius: 8px;
 
       background: #5865f2;
-
       color: white;
 
       font-weight: bold;
-
       cursor: pointer;
-
       font-size: 16px;
     }
 
@@ -123,22 +108,16 @@
     .switchButton {
       background: none;
       border: none;
-
       color: #00a8fc;
-
       cursor: pointer;
-
       font-size: 14px;
     }
 
     #authMessage {
       margin-top: 12px;
-
       min-height: 20px;
-
       color: #ff7b7b;
     }
-
 
     /* =========================
        CHAT APP
@@ -146,18 +125,14 @@
 
     #chatScreen {
       display: none;
-
       height: 100vh;
-
       overflow: hidden;
     }
 
     .app {
       display: flex;
-
       height: 100vh;
     }
-
 
     /* =========================
        SIDEBAR
@@ -165,22 +140,18 @@
 
     .sidebar {
       width: 250px;
-
       background: #1e1f22;
 
       border-right:
         1px solid #111214;
 
       display: flex;
-
       flex-direction: column;
     }
 
     .serverTitle {
       padding: 18px;
-
       font-size: 20px;
-
       font-weight: bold;
 
       border-bottom:
@@ -189,36 +160,29 @@
 
     .rooms {
       padding: 12px;
-
       flex: 1;
     }
 
     .room {
       padding: 12px;
-
       margin-bottom: 5px;
 
       border-radius: 7px;
 
       cursor: pointer;
-
       color: #b5bac1;
-
       transition: .15s;
     }
 
     .room:hover {
       background: #35373c;
-
       color: white;
     }
 
     .room.active {
       background: #404249;
-
       color: white;
     }
-
 
     /* =========================
        USER PANEL
@@ -226,13 +190,10 @@
 
     .userPanel {
       padding: 12px;
-
       background: #111214;
 
       display: flex;
-
       align-items: center;
-
       gap: 8px;
     }
 
@@ -241,24 +202,20 @@
       height: 38px;
 
       border-radius: 50%;
-
       object-fit: cover;
 
       background: #5865f2;
 
       display: flex;
-
       justify-content: center;
       align-items: center;
 
       font-weight: bold;
-
       flex-shrink: 0;
     }
 
     .userInfo {
       flex: 1;
-
       overflow: hidden;
     }
 
@@ -266,28 +223,21 @@
       font-weight: bold;
 
       white-space: nowrap;
-
       overflow: hidden;
-
       text-overflow: ellipsis;
     }
 
     .userStatus {
       color: #23a55a;
-
       font-size: 12px;
     }
 
     .profileButton,
     .logoutButton {
       border: none;
-
       border-radius: 6px;
-
       padding: 7px;
-
       cursor: pointer;
-
       color: white;
     }
 
@@ -299,34 +249,27 @@
       background: #ed4245;
     }
 
-
     /* =========================
        MAIN
     ========================= */
 
     .main {
       flex: 1;
-
       display: flex;
-
       flex-direction: column;
-
       min-width: 0;
     }
 
     .chatHeader {
       height: 60px;
-
       background: #1e1f22;
 
       display: flex;
-
       align-items: center;
 
       padding: 0 20px;
 
       font-size: 18px;
-
       font-weight: bold;
 
       border-bottom:
@@ -335,14 +278,10 @@
 
     #messages {
       flex: 1;
-
       overflow-y: auto;
-
       padding: 20px;
-
       background: #313338;
     }
-
 
     /* =========================
        MESSAGES
@@ -350,9 +289,7 @@
 
     .message {
       display: flex;
-
       gap: 12px;
-
       margin-bottom: 18px;
     }
 
@@ -361,11 +298,9 @@
       height: 42px;
 
       border-radius: 50%;
-
       object-fit: cover;
 
       background: #5865f2;
-
       flex-shrink: 0;
     }
 
@@ -375,15 +310,12 @@
 
     .messageTop {
       display: flex;
-
       align-items: baseline;
-
       gap: 8px;
     }
 
     .messageUsername {
       font-weight: bold;
-
       cursor: pointer;
     }
 
@@ -393,20 +325,16 @@
 
     .timestamp {
       color: #949ba4;
-
       font-size: 11px;
     }
 
     .messageText {
       margin-top: 4px;
-
       color: #dbdee1;
 
       word-wrap: break-word;
-
       white-space: pre-wrap;
     }
-
 
     /* =========================
        INPUT
@@ -414,13 +342,11 @@
 
     .chatInputArea {
       padding: 15px;
-
       background: #313338;
     }
 
     .chatForm {
       display: flex;
-
       gap: 10px;
     }
 
@@ -428,40 +354,30 @@
       flex: 1;
 
       background: #383a40;
-
       border: none;
-
       border-radius: 8px;
 
       padding: 14px;
-
       color: white;
-
       outline: none;
-
       font-size: 15px;
     }
 
     #sendButton {
       border: none;
-
       background: #5865f2;
-
       color: white;
 
       padding: 0 20px;
-
       border-radius: 8px;
 
       cursor: pointer;
-
       font-weight: bold;
     }
 
     #sendButton:hover {
       background: #4752c4;
     }
-
 
     /* =========================
        PROFILE MODAL
@@ -471,7 +387,6 @@
       display: none;
 
       position: fixed;
-
       inset: 0;
 
       background:
@@ -480,21 +395,17 @@
       z-index: 100;
 
       justify-content: center;
-
       align-items: center;
 
       padding: 20px;
-
       overflow-y: auto;
     }
 
     .profileEditor {
       width: 100%;
-
       max-width: 850px;
 
       background: #1e1f22;
-
       border-radius: 15px;
 
       padding: 25px;
@@ -509,10 +420,8 @@
 
     .profileEditor h2 {
       grid-column: 1 / -1;
-
       margin: 0;
     }
-
 
     /* =========================
        PROFILE FIELDS
@@ -522,11 +431,9 @@
       display: block;
 
       color: #b5bac1;
-
       font-size: 13px;
 
       margin-top: 12px;
-
       margin-bottom: 5px;
     }
 
@@ -536,40 +443,30 @@
       width: 100%;
 
       padding: 11px;
-
       border-radius: 7px;
-
       border: none;
 
       background: #111214;
-
       color: white;
-
       outline: none;
     }
 
     .editorFields textarea {
       min-height: 80px;
-
       resize: vertical;
     }
 
     .colorRow {
       display: flex;
-
       gap: 10px;
-
       align-items: center;
     }
 
     #accentColor {
       width: 55px;
-
       height: 40px;
-
       padding: 2px;
     }
-
 
     /* =========================
        PROFILE PREVIEW
@@ -577,11 +474,9 @@
 
     .preview {
       border-radius: 12px;
-
       overflow: hidden;
 
       background: #313338;
-
       height: fit-content;
     }
 
@@ -591,13 +486,11 @@
       background: #5865f2;
 
       background-size: cover;
-
       background-position: center;
     }
 
     .previewBody {
       padding: 20px;
-
       position: relative;
     }
 
@@ -606,7 +499,6 @@
       height: 80px;
 
       border-radius: 50%;
-
       object-fit: cover;
 
       background: #5865f2;
@@ -618,9 +510,7 @@
 
     .previewName {
       font-size: 22px;
-
       font-weight: bold;
-
       margin-top: 8px;
     }
 
@@ -630,24 +520,19 @@
 
     .previewStatus {
       margin-top: 12px;
-
       color: #23a55a;
     }
 
     .previewBio {
       margin-top: 12px;
-
       color: #dbdee1;
-
       white-space: pre-wrap;
     }
 
     .previewEmoji {
       font-size: 30px;
-
       margin-top: 10px;
     }
-
 
     /* =========================
        PROFILE ACTIONS
@@ -657,9 +542,7 @@
       grid-column: 1 / -1;
 
       display: flex;
-
       justify-content: flex-end;
-
       gap: 10px;
     }
 
@@ -668,13 +551,10 @@
       border: none;
 
       padding: 11px 18px;
-
       border-radius: 7px;
 
       color: white;
-
       cursor: pointer;
-
       font-weight: bold;
     }
 
@@ -685,7 +565,6 @@
     .cancelButton {
       background: #4e5058;
     }
-
 
     /* =========================
        MOBILE
@@ -713,7 +592,6 @@
 
 <body>
 
-
   <!-- =========================
        AUTH SCREEN
   ========================= -->
@@ -730,9 +608,10 @@
         Log in to your account
       </p>
 
-
-      <div id="usernameContainer"
-           style="display:none;">
+      <div
+        id="usernameContainer"
+        style="display:none;"
+      >
 
         <input
           id="usernameInput"
@@ -743,20 +622,19 @@
 
       </div>
 
-
       <input
         id="emailInput"
         type="email"
         placeholder="Email"
+        autocomplete="email"
       >
-
 
       <input
         id="passwordInput"
         type="password"
         placeholder="Password"
+        autocomplete="current-password"
       >
-
 
       <button
         class="authButton"
@@ -764,7 +642,6 @@
       >
         Log In
       </button>
-
 
       <p>
 
@@ -781,7 +658,6 @@
 
       </p>
 
-
       <div id="authMessage"></div>
 
     </div>
@@ -797,15 +673,11 @@
 
     <div class="app">
 
-
-      <!-- SIDEBAR -->
-
       <aside class="sidebar">
 
         <div class="serverTitle">
           💬 My Chat
         </div>
-
 
         <div class="rooms">
 
@@ -816,7 +688,6 @@
             💬 general
           </div>
 
-
           <div
             class="room"
             data-channel="gaming"
@@ -824,14 +695,12 @@
             🎮 gaming
           </div>
 
-
           <div
             class="room"
             data-channel="art"
           >
             🎨 art
           </div>
-
 
           <div
             class="room"
@@ -842,9 +711,6 @@
 
         </div>
 
-
-        <!-- USER PANEL -->
-
         <div class="userPanel">
 
           <div
@@ -853,7 +719,6 @@
           >
             👤
           </div>
-
 
           <div class="userInfo">
 
@@ -870,14 +735,12 @@
 
           </div>
 
-
           <button
             class="profileButton"
             id="openProfile"
           >
             👤
           </button>
-
 
           <button
             class="logoutButton"
@@ -891,8 +754,6 @@
       </aside>
 
 
-      <!-- MAIN CHAT -->
-
       <main class="main">
 
         <div
@@ -902,9 +763,7 @@
           # general
         </div>
 
-
         <div id="messages"></div>
-
 
         <div class="chatInputArea">
 
@@ -920,7 +779,6 @@
               autocomplete="off"
               maxlength="2000"
             >
-
 
             <button
               id="sendButton"
@@ -952,11 +810,7 @@
         Customize Your Profile ✨
       </h2>
 
-
       <div class="editorFields">
-
-
-        <!-- DISPLAY NAME -->
 
         <label>
           Display Name
@@ -968,9 +822,6 @@
           placeholder="Your display name"
         >
 
-
-        <!-- USERNAME -->
-
         <label>
           Username
         </label>
@@ -981,9 +832,6 @@
           placeholder="username"
         >
 
-
-        <!-- PROFILE PICTURE -->
-
         <label>
           Profile Picture URL
         </label>
@@ -993,9 +841,6 @@
           placeholder="https://example.com/image.png"
         >
 
-
-        <!-- BANNER -->
-
         <label>
           Banner URL
         </label>
@@ -1004,9 +849,6 @@
           id="bannerInput"
           placeholder="https://example.com/banner.png"
         >
-
-
-        <!-- BIO -->
 
         <label>
           Bio
@@ -1018,9 +860,6 @@
           placeholder="Tell people about yourself..."
         ></textarea>
 
-
-        <!-- STATUS -->
-
         <label>
           Custom Status
         </label>
@@ -1031,9 +870,6 @@
           placeholder="What are you doing?"
         >
 
-
-        <!-- EMOJI -->
-
         <label>
           Favorite Emoji
         </label>
@@ -1043,9 +879,6 @@
           maxlength="4"
           placeholder="😀"
         >
-
-
-        <!-- COLOR -->
 
         <label>
           Accent Color
@@ -1065,9 +898,6 @@
 
         </div>
 
-
-        <!-- WEBSITE -->
-
         <label>
           Website
         </label>
@@ -1077,9 +907,6 @@
           placeholder="https://..."
         >
 
-
-        <!-- SOCIAL -->
-
         <label>
           Social Link
         </label>
@@ -1088,9 +915,6 @@
           id="socialInput"
           placeholder="https://..."
         >
-
-
-        <!-- DECORATION -->
 
         <label>
           Profile Decoration
@@ -1124,9 +948,6 @@
 
         </select>
 
-
-        <!-- EFFECT -->
-
         <label>
           Profile Effect
         </label>
@@ -1154,8 +975,6 @@
       </div>
 
 
-      <!-- PROFILE PREVIEW -->
-
       <div
         class="preview"
         id="profilePreview"
@@ -1166,7 +985,6 @@
           id="previewBanner"
         ></div>
 
-
         <div class="previewBody">
 
           <img
@@ -1176,14 +994,12 @@
             alt=""
           >
 
-
           <div
             class="previewName"
             id="previewName"
           >
             New User
           </div>
-
 
           <div
             class="previewUsername"
@@ -1192,14 +1008,12 @@
             @username
           </div>
 
-
           <div
             class="previewStatus"
             id="previewStatus"
           >
             ● Online
           </div>
-
 
           <div
             class="previewBio"
@@ -1208,14 +1022,12 @@
             Your bio will appear here.
           </div>
 
-
           <div
             class="previewEmoji"
             id="previewEmoji"
           >
             😀
           </div>
-
 
           <div
             id="previewDecoration"
@@ -1227,8 +1039,6 @@
       </div>
 
 
-      <!-- ACTIONS -->
-
       <div class="profileActions">
 
         <button
@@ -1237,7 +1047,6 @@
         >
           Cancel
         </button>
-
 
         <button
           class="saveButton"
@@ -1265,7 +1074,6 @@
     const SUPABASE_KEY =
       "sb_publishable_f-OuNvj9jXyjcL0sZ3awvg__HZ3S_Ry";
 
-
     const supabaseClient =
       window.supabase.createClient(
         SUPABASE_URL,
@@ -1286,11 +1094,8 @@
     ========================= */
 
     let loggedInUser = null;
-
     let currentProfile = null;
-
     let authMode = "login";
-
     let currentChannel = "general";
 
 
@@ -1378,11 +1183,6 @@
         "currentUsername"
       );
 
-    const currentAvatar =
-      document.getElementById(
-        "currentAvatar"
-      );
-
     const chatHeader =
       document.getElementById(
         "chatHeader"
@@ -1419,6 +1219,9 @@
           switchButton.textContent =
             "Log In";
 
+          passwordInput.autocomplete =
+            "new-password";
+
         }
 
         else {
@@ -1443,6 +1246,9 @@
           switchButton.textContent =
             "Sign Up";
 
+          passwordInput.autocomplete =
+            "current-password";
+
         }
 
         authMessage.textContent = "";
@@ -1462,7 +1268,9 @@
         authMessage.textContent = "";
 
         const email =
-          emailInput.value.trim();
+          emailInput.value
+            .trim()
+            .toLowerCase();
 
         const password =
           passwordInput.value;
@@ -1478,7 +1286,9 @@
         }
 
 
-        /* SIGN UP */
+        /* =========================
+           SIGN UP
+        ========================= */
 
         if (authMode === "signup") {
 
@@ -1511,12 +1321,22 @@
             error
           } =
             await supabaseClient.auth.signUp({
-              email,
-              password
+
+              email:
+                email,
+
+              password:
+                password
+
             });
 
 
           if (error) {
+
+            console.error(
+              "Sign up error:",
+              error
+            );
 
             authMessage.textContent =
               error.message;
@@ -1543,7 +1363,8 @@
               .from("profiles")
               .insert({
 
-                id: data.user.id,
+                id:
+                  data.user.id,
 
                 username:
                   username,
@@ -1556,7 +1377,13 @@
 
           if (profileError) {
 
+            console.error(
+              "Profile creation error:",
+              profileError
+            );
+
             authMessage.textContent =
+              "Account was created, but the profile could not be created: " +
               profileError.message;
 
             return;
@@ -1575,7 +1402,9 @@
         }
 
 
-        /* LOGIN */
+        /* =========================
+           LOGIN
+        ========================= */
 
         else {
 
@@ -1586,16 +1415,38 @@
             await supabaseClient.auth
               .signInWithPassword({
 
-                email,
-                password
+                email:
+                  email,
+
+                password:
+                  password
 
               });
 
 
           if (error) {
 
+            console.error(
+              "Login error:",
+              error
+            );
+
             authMessage.textContent =
+              "Login failed: " +
               error.message;
+
+            return;
+
+          }
+
+
+          if (
+            !data ||
+            !data.user
+          ) {
+
+            authMessage.textContent =
+              "Login failed. No user was returned.";
 
             return;
 
@@ -1750,7 +1601,9 @@
 
 
         const newAvatar =
-          document.createElement("img");
+          document.createElement(
+            "img"
+          );
 
 
         newAvatar.id =
@@ -1848,15 +1701,11 @@
         channel;
 
 
-      /* Tell server to move us */
-
       socket.emit(
         "join channel",
         channel
       );
 
-
-      /* Update buttons */
 
       document
         .querySelectorAll(".room")
@@ -1871,19 +1720,13 @@
         });
 
 
-      /* Update header */
-
       chatHeader.textContent =
         "# " + channel;
 
 
-      /* Update input */
-
       messageInput.placeholder =
         "Message #" + channel;
 
-
-      /* Clear messages */
 
       messages.innerHTML = "";
 
@@ -1921,41 +1764,28 @@
           {
 
             text:
-
               text,
 
-
             userId:
-
               loggedInUser.id,
 
-
             username:
-
               currentProfile.username ||
               "user",
 
-
             displayName:
-
               currentProfile.display_name ||
               currentProfile.username ||
               "User",
 
-
             avatar:
-
               currentProfile.avatar_url ||
               "",
 
-
             timestamp:
-
               new Date().toISOString(),
 
-
             channel:
-
               currentChannel
 
           }
@@ -1975,13 +1805,6 @@
     socket.on(
       "chat message",
       message => {
-
-        /*
-          Extra safety:
-          only display messages
-          belonging to the current
-          channel.
-        */
 
         if (
           message.channel &&
@@ -2017,8 +1840,6 @@
       messageElement.className =
         "message";
 
-
-      /* AVATAR */
 
       let avatarHTML = "";
 
@@ -2071,15 +1892,11 @@
       }
 
 
-      /* DISPLAY NAME */
-
       const name =
         message.displayName ||
         message.username ||
         "User";
 
-
-      /* TIMESTAMP */
 
       let time = "";
 
@@ -2108,7 +1925,6 @@
 
         ${avatarHTML}
 
-
         <div
           class="messageContent"
         >
@@ -2129,7 +1945,6 @@
               )}
             </span>
 
-
             <span
               class="timestamp"
             >
@@ -2139,7 +1954,6 @@
             </span>
 
           </div>
-
 
           <div
             class="messageText"
@@ -2183,7 +1997,6 @@
 
 
           loggedInUser = null;
-
           currentProfile = null;
 
 
@@ -2195,9 +2008,7 @@
 
 
           emailInput.value = "";
-
           passwordInput.value = "";
-
           usernameInput.value = "";
 
           messages.innerHTML = "";
@@ -2254,66 +2065,55 @@
         "displayNameInput"
       );
 
-
     const profileUsernameInput =
       document.getElementById(
         "profileUsernameInput"
       );
-
 
     const avatarInput =
       document.getElementById(
         "avatarInput"
       );
 
-
     const bannerInput =
       document.getElementById(
         "bannerInput"
       );
-
 
     const bioInput =
       document.getElementById(
         "bioInput"
       );
 
-
     const customStatusInput =
       document.getElementById(
         "customStatusInput"
       );
-
 
     const emojiInput =
       document.getElementById(
         "emojiInput"
       );
 
-
     const accentColor =
       document.getElementById(
         "accentColor"
       );
-
 
     const websiteInput =
       document.getElementById(
         "websiteInput"
       );
 
-
     const socialInput =
       document.getElementById(
         "socialInput"
       );
 
-
     const decorationInput =
       document.getElementById(
         "decorationInput"
       );
-
 
     const effectInput =
       document.getElementById(
@@ -2336,56 +2136,45 @@
         currentProfile.display_name ||
         "";
 
-
       profileUsernameInput.value =
         currentProfile.username ||
         "";
-
 
       avatarInput.value =
         currentProfile.avatar_url ||
         "";
 
-
       bannerInput.value =
         currentProfile.banner_url ||
         "";
-
 
       bioInput.value =
         currentProfile.bio ||
         "";
 
-
       customStatusInput.value =
         currentProfile.custom_status ||
         "";
-
 
       emojiInput.value =
         currentProfile.favorite_emoji ||
         "😀";
 
-
       accentColor.value =
         currentProfile.accent_color ||
         "#5865F2";
-
 
       websiteInput.value =
         currentProfile.website_url ||
         "";
 
-
       socialInput.value =
         currentProfile.social_url ||
         "";
 
-
       decorationInput.value =
         currentProfile.profile_decoration ||
         "";
-
 
       effectInput.value =
         currentProfile.profile_effect ||
@@ -2410,48 +2199,40 @@
         "previewName"
       );
 
-
     const previewUsername =
       document.getElementById(
         "previewUsername"
       );
-
 
     const previewAvatar =
       document.getElementById(
         "previewAvatar"
       );
 
-
     const previewBanner =
       document.getElementById(
         "previewBanner"
       );
-
 
     const previewBio =
       document.getElementById(
         "previewBio"
       );
 
-
     const previewStatus =
       document.getElementById(
         "previewStatus"
       );
-
 
     const previewEmoji =
       document.getElementById(
         "previewEmoji"
       );
 
-
     const previewDecoration =
       document.getElementById(
         "previewDecoration"
       );
-
 
     const colorText =
       document.getElementById(
@@ -2465,34 +2246,27 @@
         displayNameInput.value ||
         "New User";
 
-
       const username =
         profileUsernameInput.value ||
         "username";
 
-
       const avatar =
         avatarInput.value;
 
-
       const banner =
         bannerInput.value;
-
 
       const bio =
         bioInput.value ||
         "Your bio will appear here.";
 
-
       const status =
         customStatusInput.value ||
         "Online";
 
-
       const emoji =
         emojiInput.value ||
         "😀";
-
 
       const color =
         accentColor.value ||
@@ -2502,22 +2276,17 @@
       previewName.textContent =
         name;
 
-
       previewUsername.textContent =
         "@" + username;
-
 
       previewBio.textContent =
         bio;
 
-
       previewStatus.textContent =
         "● " + status;
 
-
       previewEmoji.textContent =
         emoji;
-
 
       colorText.textContent =
         color;
@@ -2569,7 +2338,6 @@
 
       preview.style.boxShadow =
         "none";
-
 
       preview.style.backdropFilter =
         "none";
