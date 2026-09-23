@@ -1,3 +1,4 @@
+```js
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -13,6 +14,17 @@ const io = new Server(server, {
 
 const PORT = process.env.PORT || 3000;
 
+// Stores connected users.
+// Each user can have multiple tabs/devices connected.
+const connectedUsers = new Map();
+
+const allowedChannels = [
+  "general",
+  "gaming",
+  "art",
+  "memes"
+];
+
 app.get("/", (req, res) => {
   res.send("My chat server is online! 🎉");
 });
@@ -26,28 +38,48 @@ io.on("connection", (socket) => {
   socket.currentChannel = "general";
 
 
-  // Change channel
-  socket.on("join channel", (channel) => {
+  // =========================
+  // REGISTER USER
+  // =========================
 
-    const allowedChannels = [
-      "general",
-      "gaming",
-      "art",
-      "memes"
-    ];
+  socket.on("register user", (userId) => {
+
+    if (!userId) {
+      return;
+    }
+
+    socket.userId = userId;
+
+    if (!connectedUsers.has(userId)) {
+      connectedUsers.set(userId, new Set());
+    }
+
+    connectedUsers
+      .get(userId)
+      .add(socket.id);
+
+    console.log(
+      `Registered user ${userId} on ${socket.id}`
+    );
+
+  });
+
+
+  // =========================
+  // CHANGE CHANNEL
+  // =========================
+
+  socket.on("join channel", (channel) => {
 
     if (!allowedChannels.includes(channel)) {
       return;
     }
 
-    // Leave previous channel
     if (socket.currentChannel) {
       socket.leave(socket.currentChannel);
     }
 
-    // Join new channel
     socket.join(channel);
-
     socket.currentChannel = channel;
 
     console.log(
@@ -57,43 +89,226 @@ io.on("connection", (socket) => {
   });
 
 
-  // Chat message
+  // =========================
+  // CHAT MESSAGE
+  // =========================
+
   socket.on("chat message", (message) => {
 
-    if (!message || !message.text) {
+    if (!message) {
+      return;
+    }
+
+    const rawText =
+      String(message.text || "").trim();
+
+    if (!rawText) {
       return;
     }
 
     const channel =
-      message.channel || socket.currentChannel || "general";
-
-    const allowedChannels = [
-      "general",
-      "gaming",
-      "art",
-      "memes"
-    ];
+      message.channel ||
+      socket.currentChannel ||
+      "general";
 
     if (!allowedChannels.includes(channel)) {
       return;
     }
 
-    // Only send the message to people
-    // currently inside this channel
-    io.to(channel).emit("chat message", {
-      text: message.text,
-      userId: message.userId,
-      username: message.username,
-      displayName: message.displayName,
-      avatar: message.avatar,
-      timestamp: message.timestamp,
-      channel: channel
-    });
+
+    // =========================
+    // ANNOUNCEMENT COMMAND
+    // =========================
+
+    if (
+      rawText
+        .toLowerCase()
+        .startsWith("/announcement ")
+    ) {
+
+      const announcementText =
+        rawText
+          .slice("/announcement ".length)
+          .trim();
+
+      if (!announcementText) {
+        return;
+      }
+
+      io
+        .to(channel)
+        .emit(
+          "announcement",
+          {
+            message:
+              announcementText,
+
+            fromUsername:
+              message.username ||
+              "user",
+
+            fromDisplayName:
+              message.displayName ||
+              message.username ||
+              "User",
+
+            channel:
+              channel,
+
+            timestamp:
+              message.timestamp ||
+              new Date().toISOString()
+          }
+        );
+
+      console.log(
+        `Announcement in #${channel}: ${announcementText}`
+      );
+
+      // Don't send the /announcement command
+      // as a normal chat message.
+      return;
+    }
+
+
+    // =========================
+    // NORMAL CHAT MESSAGE
+    // =========================
+
+    const chatMessage = {
+      text: rawText,
+
+      userId:
+        message.userId,
+
+      username:
+        message.username,
+
+      displayName:
+        message.displayName,
+
+      avatar:
+        message.avatar,
+
+      timestamp:
+        message.timestamp ||
+        new Date().toISOString(),
+
+      channel:
+        channel
+    };
+
+    io
+      .to(channel)
+      .emit(
+        "chat message",
+        chatMessage
+      );
+
+
+    // =========================
+    // @MENTIONS
+    // =========================
+
+    const mentionedUserIds =
+      Array.isArray(
+        message.mentionedUserIds
+      )
+        ? message.mentionedUserIds
+        : [];
+
+    mentionedUserIds.forEach(
+      (mentionedUserId) => {
+
+        if (!mentionedUserId) {
+          return;
+        }
+
+        // Don't notify yourself
+        if (
+          mentionedUserId ===
+          message.userId
+        ) {
+          return;
+        }
+
+        const userSockets =
+          connectedUsers.get(
+            mentionedUserId
+          );
+
+        if (!userSockets) {
+          return;
+        }
+
+        userSockets.forEach(
+          (socketId) => {
+
+            io
+              .to(socketId)
+              .emit(
+                "mention notification",
+                {
+                  message:
+                    rawText,
+
+                  fromUsername:
+                    message.username ||
+                    "user",
+
+                  fromDisplayName:
+                    message.displayName ||
+                    message.username ||
+                    "User",
+
+                  channel:
+                    channel,
+
+                  timestamp:
+                    message.timestamp ||
+                    new Date().toISOString()
+                }
+              );
+
+          }
+        );
+
+      }
+    );
 
   });
 
 
+  // =========================
+  // DISCONNECT
+  // =========================
+
   socket.on("disconnect", () => {
+
+    if (socket.userId) {
+
+      const userSockets =
+        connectedUsers.get(
+          socket.userId
+        );
+
+      if (userSockets) {
+
+        userSockets.delete(
+          socket.id
+        );
+
+        if (
+          userSockets.size === 0
+        ) {
+          connectedUsers.delete(
+            socket.userId
+          );
+        }
+
+      }
+
+    }
 
     console.log(
       "User disconnected:",
@@ -104,10 +319,16 @@ io.on("connection", (socket) => {
 
 });
 
-server.listen(PORT, "0.0.0.0", () => {
 
-  console.log(
-    `Server running on port ${PORT}`
-  );
+// =========================
+// START SERVER
+// =========================
 
-});
+server.listen(
+  PORT,
+  "0.0.0.0",
+  () => {
+
+    console.log(
+      `Server running on port ${PORT}`
+    ); .
