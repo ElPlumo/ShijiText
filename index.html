@@ -302,6 +302,12 @@
 
       background: #5865f2;
       flex-shrink: 0;
+
+      cursor: pointer;
+    }
+
+    .messageAvatar:hover {
+      opacity: .85;
     }
 
     .messageContent {
@@ -380,7 +386,7 @@
     }
 
     /* =========================
-       PROFILE MODAL
+       PROFILE EDITOR
     ========================= */
 
     #profileModal {
@@ -423,10 +429,6 @@
       margin: 0;
     }
 
-    /* =========================
-       PROFILE FIELDS
-    ========================= */
-
     .editorFields label {
       display: block;
 
@@ -467,10 +469,6 @@
       height: 40px;
       padding: 2px;
     }
-
-    /* =========================
-       PROFILE PREVIEW
-    ========================= */
 
     .preview {
       border-radius: 12px;
@@ -534,10 +532,6 @@
       margin-top: 10px;
     }
 
-    /* =========================
-       PROFILE ACTIONS
-    ========================= */
-
     .profileActions {
       grid-column: 1 / -1;
 
@@ -567,6 +561,158 @@
     }
 
     /* =========================
+       PUBLIC PROFILE POPUP
+    ========================= */
+
+    #userProfilePopup {
+      display: none;
+
+      position: fixed;
+      z-index: 200;
+
+      width: 330px;
+      max-width: calc(100vw - 30px);
+
+      background: #1e1f22;
+      border-radius: 12px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.65);
+
+      border:
+        1px solid #111214;
+    }
+
+    .popupBanner {
+      height: 105px;
+
+      background: #5865f2;
+
+      background-size: cover;
+      background-position: center;
+    }
+
+    .popupBody {
+      padding: 16px;
+
+      position: relative;
+    }
+
+    .popupAvatar {
+      width: 75px;
+      height: 75px;
+
+      border-radius: 50%;
+      object-fit: cover;
+
+      background: #5865f2;
+
+      border: 5px solid #1e1f22;
+
+      margin-top: -55px;
+
+      display: block;
+    }
+
+    .popupName {
+      font-size: 21px;
+      font-weight: bold;
+
+      margin-top: 8px;
+
+      word-break: break-word;
+    }
+
+    .popupUsername {
+      color: #949ba4;
+      font-size: 14px;
+    }
+
+    .popupStatus {
+      margin-top: 10px;
+      color: #b5bac1;
+
+      font-size: 13px;
+    }
+
+    .popupBio {
+      margin-top: 12px;
+
+      color: #dbdee1;
+
+      font-size: 14px;
+
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .popupEmoji {
+      font-size: 27px;
+      margin-top: 12px;
+    }
+
+    .popupDecoration {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .popupLinks {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      margin-top: 12px;
+    }
+
+    .popupLinks a {
+      color: #00a8fc;
+      text-decoration: none;
+
+      font-size: 13px;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .popupLinks a:hover {
+      text-decoration: underline;
+    }
+
+    .popupOnline {
+      margin-top: 12px;
+
+      font-size: 12px;
+      color: #23a55a;
+    }
+
+    .popupClose {
+      position: absolute;
+
+      top: 10px;
+      right: 10px;
+
+      width: 30px;
+      height: 30px;
+
+      border: none;
+      border-radius: 50%;
+
+      background: rgba(0,0,0,.45);
+      color: white;
+
+      cursor: pointer;
+
+      font-size: 17px;
+    }
+
+    .popupClose:hover {
+      background: rgba(0,0,0,.7);
+    }
+
+    /* =========================
        MOBILE
     ========================= */
 
@@ -592,9 +738,7 @@
 
 <body>
 
-  <!-- =========================
-       AUTH SCREEN
-  ========================= -->
+  <!-- AUTH -->
 
   <div id="authScreen">
 
@@ -608,10 +752,7 @@
         Log in to your account
       </p>
 
-      <div
-        id="usernameContainer"
-        style="display:none;"
-      >
+      <div id="usernameContainer" style="display:none;">
 
         <input
           id="usernameInput"
@@ -665,9 +806,7 @@
   </div>
 
 
-  <!-- =========================
-       CHAT SCREEN
-  ========================= -->
+  <!-- CHAT -->
 
   <div id="chatScreen">
 
@@ -798,9 +937,7 @@
   </div>
 
 
-  <!-- =========================
-       PROFILE MODAL
-  ========================= -->
+  <!-- PROFILE EDITOR -->
 
   <div id="profileModal">
 
@@ -812,9 +949,7 @@
 
       <div class="editorFields">
 
-        <label>
-          Display Name
-        </label>
+        <label>Display Name</label>
 
         <input
           id="displayNameInput"
@@ -822,9 +957,7 @@
           placeholder="Your display name"
         >
 
-        <label>
-          Username
-        </label>
+        <label>Username</label>
 
         <input
           id="profileUsernameInput"
@@ -832,27 +965,21 @@
           placeholder="username"
         >
 
-        <label>
-          Profile Picture URL
-        </label>
+        <label>Profile Picture URL</label>
 
         <input
           id="avatarInput"
           placeholder="https://example.com/image.png"
         >
 
-        <label>
-          Banner URL
-        </label>
+        <label>Banner URL</label>
 
         <input
           id="bannerInput"
           placeholder="https://example.com/banner.png"
         >
 
-        <label>
-          Bio
-        </label>
+        <label>Bio</label>
 
         <textarea
           id="bioInput"
@@ -860,9 +987,7 @@
           placeholder="Tell people about yourself..."
         ></textarea>
 
-        <label>
-          Custom Status
-        </label>
+        <label>Custom Status</label>
 
         <input
           id="customStatusInput"
@@ -870,9 +995,7 @@
           placeholder="What are you doing?"
         >
 
-        <label>
-          Favorite Emoji
-        </label>
+        <label>Favorite Emoji</label>
 
         <input
           id="emojiInput"
@@ -880,9 +1003,7 @@
           placeholder="😀"
         >
 
-        <label>
-          Accent Color
-        </label>
+        <label>Accent Color</label>
 
         <div class="colorRow">
 
@@ -898,33 +1019,25 @@
 
         </div>
 
-        <label>
-          Website
-        </label>
+        <label>Website</label>
 
         <input
           id="websiteInput"
           placeholder="https://..."
         >
 
-        <label>
-          Social Link
-        </label>
+        <label>Social Link</label>
 
         <input
           id="socialInput"
           placeholder="https://..."
         >
 
-        <label>
-          Profile Decoration
-        </label>
+        <label>Profile Decoration</label>
 
         <select id="decorationInput">
 
-          <option value="">
-            None
-          </option>
+          <option value="">None</option>
 
           <option value="✨ Sparkles">
             ✨ Sparkles
@@ -948,15 +1061,11 @@
 
         </select>
 
-        <label>
-          Profile Effect
-        </label>
+        <label>Profile Effect</label>
 
         <select id="effectInput">
 
-          <option value="">
-            None
-          </option>
+          <option value="">None</option>
 
           <option value="glow">
             Glow
@@ -1062,6 +1171,81 @@
   </div>
 
 
+  <!-- PUBLIC USER PROFILE POPUP -->
+
+  <div id="userProfilePopup">
+
+    <div
+      class="popupBanner"
+      id="popupBanner"
+    ></div>
+
+    <div class="popupBody">
+
+      <button
+        class="popupClose"
+        id="popupClose"
+      >
+        ×
+      </button>
+
+      <img
+        class="popupAvatar"
+        id="popupAvatar"
+        src=""
+        alt=""
+      >
+
+      <div
+        class="popupName"
+        id="popupName"
+      >
+        User
+      </div>
+
+      <div
+        class="popupUsername"
+        id="popupUsername"
+      >
+        @username
+      </div>
+
+      <div
+        class="popupStatus"
+        id="popupStatus"
+      >
+        ● Online
+      </div>
+
+      <div
+        class="popupBio"
+        id="popupBio"
+      ></div>
+
+      <div
+        class="popupEmoji"
+        id="popupEmoji"
+      ></div>
+
+      <div
+        class="popupDecoration"
+        id="popupDecoration"
+      ></div>
+
+      <div
+        class="popupLinks"
+        id="popupLinks"
+      ></div>
+
+      <div class="popupOnline">
+        ● Online
+      </div>
+
+    </div>
+
+  </div>
+
+
   <script>
 
     /* =========================
@@ -1104,89 +1288,55 @@
     ========================= */
 
     const authScreen =
-      document.getElementById(
-        "authScreen"
-      );
+      document.getElementById("authScreen");
 
     const chatScreen =
-      document.getElementById(
-        "chatScreen"
-      );
+      document.getElementById("chatScreen");
 
     const authTitle =
-      document.getElementById(
-        "authTitle"
-      );
+      document.getElementById("authTitle");
 
     const authSubtitle =
-      document.getElementById(
-        "authSubtitle"
-      );
+      document.getElementById("authSubtitle");
 
     const usernameContainer =
-      document.getElementById(
-        "usernameContainer"
-      );
+      document.getElementById("usernameContainer");
 
     const usernameInput =
-      document.getElementById(
-        "usernameInput"
-      );
+      document.getElementById("usernameInput");
 
     const emailInput =
-      document.getElementById(
-        "emailInput"
-      );
+      document.getElementById("emailInput");
 
     const passwordInput =
-      document.getElementById(
-        "passwordInput"
-      );
+      document.getElementById("passwordInput");
 
     const authButton =
-      document.getElementById(
-        "authButton"
-      );
+      document.getElementById("authButton");
 
     const switchButton =
-      document.getElementById(
-        "switchButton"
-      );
+      document.getElementById("switchButton");
 
     const switchText =
-      document.getElementById(
-        "switchText"
-      );
+      document.getElementById("switchText");
 
     const authMessage =
-      document.getElementById(
-        "authMessage"
-      );
+      document.getElementById("authMessage");
 
     const messages =
-      document.getElementById(
-        "messages"
-      );
+      document.getElementById("messages");
 
     const messageInput =
-      document.getElementById(
-        "messageInput"
-      );
+      document.getElementById("messageInput");
 
     const chatForm =
-      document.getElementById(
-        "chatForm"
-      );
+      document.getElementById("chatForm");
 
     const currentUsername =
-      document.getElementById(
-        "currentUsername"
-      );
+      document.getElementById("currentUsername");
 
     const chatHeader =
-      document.getElementById(
-        "chatHeader"
-      );
+      document.getElementById("chatHeader");
 
 
     /* =========================
@@ -1286,9 +1436,7 @@
         }
 
 
-        /* =========================
-           SIGN UP
-        ========================= */
+        /* SIGN UP */
 
         if (authMode === "signup") {
 
@@ -1402,9 +1550,7 @@
         }
 
 
-        /* =========================
-           LOGIN
-        ========================= */
+        /* LOGIN */
 
         else {
 
@@ -1574,7 +1720,7 @@
 
 
     /* =========================
-       UPDATE USER UI
+       UPDATE CURRENT USER UI
     ========================= */
 
     function updateCurrentUserUI() {
@@ -1592,18 +1738,16 @@
         displayName;
 
 
+      const oldAvatar =
+        document.getElementById(
+          "currentAvatar"
+        );
+
+
       if (currentProfile.avatar_url) {
 
-        const oldAvatar =
-          document.getElementById(
-            "currentAvatar"
-          );
-
-
         const newAvatar =
-          document.createElement(
-            "img"
-          );
+          document.createElement("img");
 
 
         newAvatar.id =
@@ -1617,6 +1761,21 @@
 
         newAvatar.alt = "";
 
+        newAvatar.style.cursor =
+          "pointer";
+
+
+        newAvatar.addEventListener(
+          "click",
+          () => {
+
+            openUserProfile(
+              currentProfile.id
+            );
+
+          }
+        );
+
 
         oldAvatar.replaceWith(
           newAvatar
@@ -1626,19 +1785,35 @@
 
       else {
 
-        const avatar =
-          document.getElementById(
-            "currentAvatar"
-          );
-
-
-        avatar.textContent =
+        oldAvatar.textContent =
           (
             displayName[0] ||
             "U"
           ).toUpperCase();
 
+        oldAvatar.onclick =
+          () => {
+
+            openUserProfile(
+              currentProfile.id
+            );
+
+          };
+
       }
+
+
+      currentUsername.onclick =
+        () => {
+
+          openUserProfile(
+            currentProfile.id
+          );
+
+        };
+
+      currentUsername.style.cursor =
+        "pointer";
 
     }
 
@@ -1655,14 +1830,11 @@
       chatScreen.style.display =
         "block";
 
-
       updateCurrentUserUI();
-
 
       joinChannel(
         currentChannel
       );
-
 
       messageInput.focus();
 
@@ -1841,6 +2013,12 @@
         "message";
 
 
+      const userId =
+        message.userId || "";
+
+
+      /* AVATAR */
+
       let avatarHTML = "";
 
 
@@ -1849,7 +2027,10 @@
         avatarHTML = `
 
           <img
-            class="messageAvatar"
+            class="messageAvatar profileClickable"
+            data-user-id="${escapeHtml(
+              userId
+            )}"
             src="${escapeHtml(
               message.avatar
             )}"
@@ -1873,7 +2054,10 @@
         avatarHTML = `
 
           <div
-            class="messageAvatar"
+            class="messageAvatar profileClickable"
+            data-user-id="${escapeHtml(
+              userId
+            )}"
             style="
               display:flex;
               align-items:center;
@@ -1934,7 +2118,10 @@
           >
 
             <span
-              class="messageUsername"
+              class="messageUsername profileClickable"
+              data-user-id="${escapeHtml(
+                userId
+              )}"
               title="@${escapeHtml(
                 message.username ||
                 "user"
@@ -1969,6 +2156,40 @@
       `;
 
 
+      /* MAKE PFP + NAME CLICKABLE */
+
+      messageElement
+        .querySelectorAll(
+          ".profileClickable"
+        )
+        .forEach(element => {
+
+          element.addEventListener(
+            "click",
+            event => {
+
+              event.stopPropagation();
+
+              const clickedUserId =
+                element.dataset.userId;
+
+
+              if (
+                clickedUserId
+              ) {
+
+                openUserProfile(
+                  clickedUserId
+                );
+
+              }
+
+            }
+          );
+
+        });
+
+
       messages.appendChild(
         messageElement
       );
@@ -1978,6 +2199,488 @@
         messages.scrollHeight;
 
     }
+
+
+    /* =========================
+       PUBLIC USER PROFILE
+       ========================= */
+
+    const userProfilePopup =
+      document.getElementById(
+        "userProfilePopup"
+      );
+
+    const popupBanner =
+      document.getElementById(
+        "popupBanner"
+      );
+
+    const popupAvatar =
+      document.getElementById(
+        "popupAvatar"
+      );
+
+    const popupName =
+      document.getElementById(
+        "popupName"
+      );
+
+    const popupUsername =
+      document.getElementById(
+        "popupUsername"
+      );
+
+    const popupStatus =
+      document.getElementById(
+        "popupStatus"
+      );
+
+    const popupBio =
+      document.getElementById(
+        "popupBio"
+      );
+
+    const popupEmoji =
+      document.getElementById(
+        "popupEmoji"
+      );
+
+    const popupDecoration =
+      document.getElementById(
+        "popupDecoration"
+      );
+
+    const popupLinks =
+      document.getElementById(
+        "popupLinks"
+      );
+
+
+    async function openUserProfile(userId) {
+
+      if (!userId) {
+        return;
+      }
+
+
+      userProfilePopup.style.display =
+        "block";
+
+
+      popupName.textContent =
+        "Loading...";
+
+      popupUsername.textContent =
+        "";
+
+      popupBio.textContent =
+        "";
+
+      popupStatus.textContent =
+        "";
+
+      popupEmoji.textContent =
+        "";
+
+      popupDecoration.textContent =
+        "";
+
+      popupLinks.innerHTML =
+        "";
+
+
+      /* POSITION NEAR CENTER */
+
+      userProfilePopup.style.left =
+        "50%";
+
+      userProfilePopup.style.top =
+        "50%";
+
+      userProfilePopup.style.transform =
+        "translate(-50%, -50%)";
+
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select("*")
+          .eq(
+            "id",
+            userId
+          )
+          .maybeSingle();
+
+
+      if (error) {
+
+        console.error(
+          "Could not load user profile:",
+          error
+        );
+
+        popupName.textContent =
+          "Could not load profile.";
+
+        return;
+
+      }
+
+
+      if (!data) {
+
+        popupName.textContent =
+          "User not found.";
+
+        return;
+
+      }
+
+
+      displayPublicProfile(
+        data
+      );
+
+    }
+
+
+    function displayPublicProfile(profile) {
+
+      const name =
+        profile.display_name ||
+        profile.username ||
+        "User";
+
+
+      const username =
+        profile.username ||
+        "user";
+
+
+      const color =
+        profile.accent_color ||
+        "#5865F2";
+
+
+      /* NAME */
+
+      popupName.textContent =
+        name;
+
+
+      popupName.style.color =
+        color;
+
+
+      /* USERNAME */
+
+      popupUsername.textContent =
+        "@" + username;
+
+
+      /* BANNER */
+
+      popupBanner.style.backgroundColor =
+        color;
+
+
+      if (profile.banner_url) {
+
+        popupBanner.style.backgroundImage =
+          `url("${profile.banner_url}")`;
+
+      }
+
+      else {
+
+        popupBanner.style.backgroundImage =
+          "none";
+
+      }
+
+
+      /* AVATAR */
+
+      if (profile.avatar_url) {
+
+        popupAvatar.src =
+          profile.avatar_url;
+
+      }
+
+      else {
+
+        popupAvatar.src =
+          "https://via.placeholder.com/100/5865F2/FFFFFF?text=" +
+          encodeURIComponent(
+            (
+              name[0] ||
+              "U"
+            ).toUpperCase()
+          );
+
+      }
+
+
+      /* STATUS */
+
+      if (profile.custom_status) {
+
+        popupStatus.textContent =
+          "● " +
+          profile.custom_status;
+
+      }
+
+      else {
+
+        popupStatus.textContent =
+          "● Online";
+
+      }
+
+
+      /* BIO */
+
+      if (profile.bio) {
+
+        popupBio.textContent =
+          profile.bio;
+
+      }
+
+      else {
+
+        popupBio.textContent =
+          "No bio yet.";
+
+      }
+
+
+      /* EMOJI */
+
+      popupEmoji.textContent =
+        profile.favorite_emoji ||
+        "😀";
+
+
+      /* DECORATION */
+
+      if (
+        profile.profile_decoration
+      ) {
+
+        popupDecoration.textContent =
+          profile.profile_decoration;
+
+      }
+
+      else {
+
+        popupDecoration.textContent =
+          "";
+
+      }
+
+
+      /* EFFECT */
+
+      userProfilePopup.style.boxShadow =
+        "0 20px 60px rgba(0,0,0,.65)";
+
+
+      if (
+        profile.profile_effect ===
+        "glow"
+      ) {
+
+        userProfilePopup.style.boxShadow =
+          `0 0 30px ${color}`;
+
+      }
+
+      else if (
+        profile.profile_effect ===
+        "shadow"
+      ) {
+
+        userProfilePopup.style.boxShadow =
+          "0 25px 70px rgba(0,0,0,.9)";
+
+      }
+
+      else if (
+        profile.profile_effect ===
+        "glass"
+      ) {
+
+        userProfilePopup.style.backdropFilter =
+          "blur(15px)";
+
+        userProfilePopup.style.background =
+          "rgba(30,31,34,.85)";
+
+      }
+
+      else {
+
+        userProfilePopup.style.backdropFilter =
+          "none";
+
+        userProfilePopup.style.background =
+          "#1e1f22";
+
+      }
+
+
+      /* LINKS */
+
+      popupLinks.innerHTML =
+        "";
+
+
+      if (profile.website_url) {
+
+        addPopupLink(
+          "🌐 Website",
+          profile.website_url
+        );
+
+      }
+
+
+      if (profile.social_url) {
+
+        addPopupLink(
+          "🔗 Social",
+          profile.social_url
+        );
+
+      }
+
+    }
+
+
+    function addPopupLink(
+      label,
+      url
+    ) {
+
+      let safeUrl = url.trim();
+
+
+      if (
+        !safeUrl.startsWith("http://") &&
+        !safeUrl.startsWith("https://")
+      ) {
+
+        safeUrl =
+          "https://" +
+          safeUrl;
+
+      }
+
+
+      const link =
+        document.createElement(
+          "a"
+        );
+
+
+      link.href =
+        safeUrl;
+
+      link.target =
+        "_blank";
+
+      link.rel =
+        "noopener noreferrer";
+
+      link.textContent =
+        label + ": " + safeUrl;
+
+
+      popupLinks.appendChild(
+        link
+      );
+
+    }
+
+
+    /* =========================
+       CLOSE PUBLIC PROFILE
+       ========================= */
+
+    document
+      .getElementById(
+        "popupClose"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          userProfilePopup.style.display =
+            "none";
+
+        }
+      );
+
+
+    /* Click outside popup */
+
+    document.addEventListener(
+      "click",
+      event => {
+
+        if (
+          userProfilePopup.style.display !==
+          "block"
+        ) {
+
+          return;
+
+        }
+
+
+        if (
+          !userProfilePopup.contains(
+            event.target
+          ) &&
+          !event.target.closest(
+            ".profileClickable"
+          )
+        ) {
+
+          userProfilePopup.style.display =
+            "none";
+
+        }
+
+      }
+    );
+
+
+    /* Escape key */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key ===
+          "Escape"
+        ) {
+
+          userProfilePopup.style.display =
+            "none";
+
+        }
+
+      }
+    );
 
 
     /* =========================
@@ -2018,7 +2721,7 @@
 
 
     /* =========================
-       PROFILE MODAL
+       PROFILE EDITOR
     ========================= */
 
     const profileModal =
@@ -2056,9 +2759,7 @@
       );
 
 
-    /* =========================
-       PROFILE INPUTS
-    ========================= */
+    /* PROFILE INPUTS */
 
     const displayNameInput =
       document.getElementById(
@@ -2122,7 +2823,7 @@
 
 
     /* =========================
-       OPEN PROFILE
+       OPEN PROFILE EDITOR
     ========================= */
 
     function openProfileEditor() {
