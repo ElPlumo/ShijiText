@@ -6,10 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Chat</title>
 
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Socket.IO -->
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -17,59 +24,89 @@
       color: white;
     }
 
-    .screen {
+    /* AUTH */
+
+    #authScreen {
       min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      background: #202225;
     }
 
-    .box {
+    .authBox {
+      width: 400px;
+      max-width: 90%;
+      padding: 35px;
       background: #2f3136;
-      width: 360px;
-      padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.3);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
-    h1 {
+    .authBox h1 {
       text-align: center;
-      margin-top: 0;
+      margin-bottom: 8px;
     }
 
-    input {
-      box-sizing: border-box;
+    .subtitle {
+      text-align: center;
+      color: #b9bbbe;
+      margin-bottom: 25px;
+    }
+
+    .authBox input {
       width: 100%;
-      padding: 12px;
-      margin: 7px 0;
+      padding: 13px;
+      margin-bottom: 12px;
       border: none;
       border-radius: 6px;
       background: #40444b;
       color: white;
+      font-size: 15px;
+      outline: none;
     }
 
-    button {
+    .authBox input:focus {
+      outline: 2px solid #5865f2;
+    }
+
+    .authButton {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
+      padding: 13px;
       border: none;
       border-radius: 6px;
       background: #5865f2;
       color: white;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 15px;
     }
 
-    button:hover {
+    .authButton:hover {
       background: #4752c4;
     }
 
-    .switch {
+    .switchButton {
+      margin-top: 18px;
+      text-align: center;
+      color: #00aff4;
+      cursor: pointer;
+    }
+
+    .switchButton:hover {
+      text-decoration: underline;
+    }
+
+    #status {
       text-align: center;
       margin-top: 15px;
-      cursor: pointer;
-      color: #7289da;
+      color: #ffcc00;
     }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* CHAT */
 
     #chatScreen {
       display: none;
@@ -77,12 +114,37 @@
       flex-direction: column;
     }
 
-    #topbar {
+    #topBar {
+      height: 60px;
       background: #2f3136;
-      padding: 15px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid #202225;
+    }
+
+    #topBarLeft {
+      font-size: 18px;
+    }
+
+    #currentUser {
+      color: #b9bbbe;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    #logoutButton {
+      background: #ed4245;
+      color: white;
+      border: none;
+      padding: 9px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #logoutButton:hover {
+      background: #c03537;
     }
 
     #messages {
@@ -92,94 +154,144 @@
     }
 
     .message {
-      margin-bottom: 12px;
-      padding: 10px;
       background: #2f3136;
+      padding: 10px 14px;
+      margin-bottom: 10px;
       border-radius: 8px;
+    }
+
+    .messageUser {
+      font-weight: bold;
+      color: #7289da;
+    }
+
+    .messageText {
+      margin-top: 4px;
     }
 
     #messageArea {
       display: flex;
+      gap: 10px;
       padding: 15px;
       background: #2f3136;
     }
 
     #messageInput {
       flex: 1;
-      margin: 0;
+      padding: 13px;
+      background: #40444b;
+      border: none;
+      border-radius: 7px;
+      color: white;
+      outline: none;
+      font-size: 15px;
     }
 
     #sendButton {
-      width: 90px;
-      margin: 0 0 0 10px;
+      width: 80px;
+      border: none;
+      border-radius: 7px;
+      background: #5865f2;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
     }
 
-    #logoutButton {
-      width: auto;
-      margin: 0;
-      padding: 8px 14px;
-      background: #ed4245;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    #status {
-      text-align: center;
-      min-height: 20px;
-      margin-top: 10px;
+    #sendButton:hover {
+      background: #4752c4;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- LOGIN / SIGNUP -->
-  <div id="authScreen" class="screen">
-    <div class="box">
+  <!-- ========================= -->
+  <!-- LOGIN / SIGN UP SCREEN -->
+  <!-- ========================= -->
 
-      <h1 id="authTitle">Log In</h1>
+  <div id="authScreen">
 
-      <input id="email" type="email" placeholder="Email">
-      <input id="password" type="password" placeholder="Password">
+    <div class="authBox">
+
+      <h1 id="authTitle">Welcome Back!</h1>
+
+      <div class="subtitle" id="authSubtitle">
+        Log in to continue to My Chat
+      </div>
 
       <input
-        id="username"
+        id="usernameInput"
         class="hidden"
         type="text"
         placeholder="Username"
       >
 
-      <button id="authButton">Log In</button>
+      <input
+        id="emailInput"
+        type="email"
+        placeholder="Email"
+      >
 
-      <div id="switchMode" class="switch">
+      <input
+        id="passwordInput"
+        type="password"
+        placeholder="Password"
+      >
+
+      <button
+        class="authButton"
+        id="authButton"
+      >
+        Log In
+      </button>
+
+      <div
+        class="switchButton"
+        id="switchButton"
+      >
         Don't have an account? Sign Up
       </div>
 
       <div id="status"></div>
 
     </div>
+
   </div>
 
 
-  <!-- CHAT -->
+  <!-- ========================= -->
+  <!-- CHAT SCREEN -->
+  <!-- ========================= -->
+
   <div id="chatScreen">
 
-    <div id="topbar">
-      <div>
+    <div id="topBar">
+
+      <div id="topBarLeft">
         💬 <strong>My Chat</strong>
-        <span id="userDisplay"></span>
+        <span id="currentUser"></span>
       </div>
 
-      <button id="logoutButton">Log Out</button>
+      <button id="logoutButton">
+        Log Out
+      </button>
+
     </div>
 
     <div id="messages"></div>
 
     <div id="messageArea">
-      <input id="messageInput" placeholder="Type a message...">
-      <button id="sendButton">Send</button>
+
+      <input
+        id="messageInput"
+        type="text"
+        placeholder="Message..."
+      >
+
+      <button id="sendButton">
+        Send
+      </button>
+
     </div>
 
   </div>
@@ -187,7 +299,10 @@
 
 <script>
 
-  // SUPABASE
+  /* =========================
+     SUPABASE
+  ========================= */
+
   const SUPABASE_URL =
     "https://tscporvkmgkwymrftzyn.supabase.co";
 
@@ -201,12 +316,18 @@
     );
 
 
-  // SOCKET.IO
+  /* =========================
+     SOCKET.IO
+  ========================= */
+
   const socket =
     io("https://chat-server-2h9q.onrender.com");
 
 
-  // ELEMENTS
+  /* =========================
+     ELEMENTS
+  ========================= */
+
   const authScreen =
     document.getElementById("authScreen");
 
@@ -216,26 +337,29 @@
   const authTitle =
     document.getElementById("authTitle");
 
+  const authSubtitle =
+    document.getElementById("authSubtitle");
+
   const authButton =
     document.getElementById("authButton");
 
-  const switchMode =
-    document.getElementById("switchMode");
+  const switchButton =
+    document.getElementById("switchButton");
 
   const usernameInput =
-    document.getElementById("username");
+    document.getElementById("usernameInput");
 
   const emailInput =
-    document.getElementById("email");
+    document.getElementById("emailInput");
 
   const passwordInput =
-    document.getElementById("password");
+    document.getElementById("passwordInput");
 
-  const statusText =
+  const status =
     document.getElementById("status");
 
-  const userDisplay =
-    document.getElementById("userDisplay");
+  const currentUser =
+    document.getElementById("currentUser");
 
   const logoutButton =
     document.getElementById("logoutButton");
@@ -251,40 +375,355 @@
 
 
   let signupMode = false;
-  let currentUser = null;
+  let loggedInUser = null;
 
 
-  // SWITCH LOGIN / SIGNUP
-  switchMode.onclick = () => {
+  /* =========================
+     LOGIN / SIGN UP SWITCH
+  ========================= */
+
+  switchButton.addEventListener("click", () => {
 
     signupMode = !signupMode;
 
+    status.textContent = "";
+
     if (signupMode) {
 
-      authTitle.textContent = "Create Account";
+      authTitle.textContent =
+        "Create Your Account";
 
-      authButton.textContent = "Sign Up";
+      authSubtitle.textContent =
+        "Make an account for My Chat";
+
+      authButton.textContent =
+        "Sign Up";
 
       usernameInput.classList.remove("hidden");
 
-      switchMode.textContent =
+      switchButton.textContent =
         "Already have an account? Log In";
 
     } else {
 
-      authTitle.textContent = "Log In";
+      authTitle.textContent =
+        "Welcome Back!";
 
-      authButton.textContent = "Log In";
+      authSubtitle.textContent =
+        "Log in to continue to My Chat";
+
+      authButton.textContent =
+        "Log In";
 
       usernameInput.classList.add("hidden");
 
-      switchMode.textContent =
+      switchButton.textContent =
         "Don't have an account? Sign Up";
     }
 
-    statusText.textContent = "";
-  };
+  });
 
 
-  // AUT
+  /* =========================
+     AUTH BUTTON
+  ========================= */
+
+  authButton.addEventListener("click", async () => {
+
+    const email =
+      emailInput.value.trim();
+
+    const password =
+      passwordInput.value;
+
+    const username =
+      usernameInput.value.trim();
+
+
+    if (!email || !password) {
+
+      status.textContent =
+        "Please enter your email and password.";
+
+      return;
+    }
+
+
+    /* SIGN UP */
+
+    if (signupMode) {
+
+      if (!username) {
+
+        status.textContent =
+          "Please choose a username.";
+
+        return;
+      }
+
+
+      status.textContent =
+        "Creating account...";
+
+
+      const { data, error } =
+        await supabaseClient.auth.signUp({
+          email: email,
+          password: password
+        });
+
+
+      if (error) {
+
+        status.textContent =
+          error.message;
+
+        return;
+      }
+
+
+      if (data.user) {
+
+        const { error: profileError } =
+          await supabaseClient
+            .from("profiles")
+            .insert({
+              id: data.user.id,
+              username: username,
+              display_name: username
+            });
+
+
+        if (profileError) {
+
+          status.textContent =
+            "Account created, but profile setup failed: " +
+            profileError.message;
+
+          return;
+        }
+
+      }
+
+
+      status.textContent =
+        "Account created! You may need to confirm your email.";
+
+      return;
+    }
+
+
+    /* LOGIN */
+
+    status.textContent =
+      "Logging in...";
+
+
+    const { error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+
+    if (error) {
+
+      status.textContent =
+        error.message;
+
+      return;
+    }
+
+
+    await showChat();
+
+  });
+
+
+  /* =========================
+     SHOW CHAT
+  ========================= */
+
+  async function showChat() {
+
+    const { data } =
+      await supabaseClient.auth.getUser();
+
+    loggedInUser =
+      data.user;
+
+
+    if (!loggedInUser) {
+      return;
+    }
+
+
+    const { data: profile } =
+      await supabaseClient
+        .from("profiles")
+        .select("username, display_name")
+        .eq("id", loggedInUser.id)
+        .maybeSingle();
+
+
+    authScreen.style.display =
+      "none";
+
+    chatScreen.style.display =
+      "flex";
+
+
+    if (profile) {
+
+      currentUser.textContent =
+        "@" + profile.username;
+
+    } else {
+
+      currentUser.textContent =
+        "@" + loggedInUser.email;
+    }
+
+  }
+
+
+  /* =========================
+     LOG OUT
+  ========================= */
+
+  logoutButton.addEventListener("click", async () => {
+
+    await supabaseClient.auth.signOut();
+
+    loggedInUser = null;
+
+    chatScreen.style.display =
+      "none";
+
+    authScreen.style.display =
+      "flex";
+
+    emailInput.value = "";
+
+    passwordInput.value = "";
+
+    usernameInput.value = "";
+
+    status.textContent = "";
+
+  });
+
+
+  /* =========================
+     SEND MESSAGE
+  ========================= */
+
+  function sendMessage() {
+
+    const text =
+      messageInput.value.trim();
+
+    if (!text) {
+      return;
+    }
+
+
+    socket.emit("chat message", {
+
+      text: text,
+
+      username:
+        loggedInUser?.email || "User"
+
+    });
+
+
+    messageInput.value = "";
+
+  }
+
+
+  sendButton.addEventListener(
+    "click",
+    sendMessage
+  );
+
+
+  messageInput.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+
+    }
+  );
+
+
+  /* =========================
+     RECEIVE MESSAGE
+  ========================= */
+
+  socket.on("chat message", (message) => {
+
+    const messageDiv =
+      document.createElement("div");
+
+    messageDiv.className =
+      "message";
+
+
+    const userDiv =
+      document.createElement("div");
+
+    userDiv.className =
+      "messageUser";
+
+    userDiv.textContent =
+      message.username;
+
+
+    const textDiv =
+      document.createElement("div");
+
+    textDiv.className =
+      "messageText";
+
+    textDiv.textContent =
+      message.text;
+
+
+    messageDiv.appendChild(userDiv);
+
+    messageDiv.appendChild(textDiv);
+
+    messages.appendChild(messageDiv);
+
+
+    messages.scrollTop =
+      messages.scrollHeight;
+
+  });
+
+
+  /* =========================
+     CHECK IF ALREADY LOGGED IN
+  ========================= */
+
+  supabaseClient.auth.getSession()
+    .then(({ data }) => {
+
+      if (data.session) {
+
+        showChat();
+
+      }
+
+    });
+
+</script>
+
+</body>
+</html>
 ```
