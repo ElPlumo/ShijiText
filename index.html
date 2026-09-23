@@ -1,112 +1,290 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Chat</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #222;
-      color: white;
       margin: 0;
+      font-family: Arial, sans-serif;
+      background: #202225;
+      color: white;
+    }
+
+    .screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .box {
+      background: #2f3136;
+      width: 360px;
       padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
     }
 
     h1 {
       text-align: center;
+      margin-top: 0;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0;
+      border: none;
+      border-radius: 6px;
+      background: #40444b;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #5865f2;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background: #4752c4;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 15px;
+      cursor: pointer;
+      color: #7289da;
+    }
+
+    #chatScreen {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    #topbar {
+      background: #2f3136;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     #messages {
-      background: #333;
-      border-radius: 10px;
-      padding: 15px;
-      height: 400px;
+      flex: 1;
       overflow-y: auto;
-      margin-bottom: 15px;
+      padding: 20px;
     }
 
     .message {
-      background: #444;
+      margin-bottom: 12px;
       padding: 10px;
-      margin: 8px 0;
+      background: #2f3136;
       border-radius: 8px;
     }
 
-    #messageBox {
+    #messageArea {
       display: flex;
-      gap: 10px;
+      padding: 15px;
+      background: #2f3136;
     }
 
     #messageInput {
       flex: 1;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
+      margin: 0;
     }
 
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+    #sendButton {
+      width: 90px;
+      margin: 0 0 0 10px;
+    }
+
+    #logoutButton {
+      width: auto;
+      margin: 0;
+      padding: 8px 14px;
+      background: #ed4245;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #status {
+      text-align: center;
+      min-height: 20px;
+      margin-top: 10px;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>💬 My Chat</h1>
+  <!-- LOGIN / SIGNUP -->
+  <div id="authScreen" class="screen">
+    <div class="box">
 
-  <div id="messages"></div>
+      <h1 id="authTitle">Log In</h1>
 
-  <div id="messageBox">
-    <input
-      id="messageInput"
-      placeholder="Type a message..."
-    >
+      <input id="email" type="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
 
-    <button onclick="sendMessage()">Send</button>
+      <input
+        id="username"
+        class="hidden"
+        type="text"
+        placeholder="Username"
+      >
+
+      <button id="authButton">Log In</button>
+
+      <div id="switchMode" class="switch">
+        Don't have an account? Sign Up
+      </div>
+
+      <div id="status"></div>
+
+    </div>
   </div>
 
-  <script>
-    const socket = io("https://chat-server-2h9q.onrender.com");
 
-    const messages = document.getElementById("messages");
-    const input = document.getElementById("messageInput");
+  <!-- CHAT -->
+  <div id="chatScreen">
 
-    socket.on("connect", () => {
-      console.log("Connected to chat server!");
-    });
+    <div id="topbar">
+      <div>
+        💬 <strong>My Chat</strong>
+        <span id="userDisplay"></span>
+      </div>
 
-    function sendMessage() {
-      const message = input.value.trim();
+      <button id="logoutButton">Log Out</button>
+    </div>
 
-      if (message === "") return;
+    <div id="messages"></div>
 
-      socket.emit("chat message", message);
+    <div id="messageArea">
+      <input id="messageInput" placeholder="Type a message...">
+      <button id="sendButton">Send</button>
+    </div>
 
-      input.value = "";
+  </div>
+
+
+<script>
+
+  // SUPABASE
+  const SUPABASE_URL =
+    "https://tscporvkmgkwymrftzyn.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_f-OuNvj9jXyjcL0sZ3awvg__HZ3S_Ry";
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+  // SOCKET.IO
+  const socket =
+    io("https://chat-server-2h9q.onrender.com");
+
+
+  // ELEMENTS
+  const authScreen =
+    document.getElementById("authScreen");
+
+  const chatScreen =
+    document.getElementById("chatScreen");
+
+  const authTitle =
+    document.getElementById("authTitle");
+
+  const authButton =
+    document.getElementById("authButton");
+
+  const switchMode =
+    document.getElementById("switchMode");
+
+  const usernameInput =
+    document.getElementById("username");
+
+  const emailInput =
+    document.getElementById("email");
+
+  const passwordInput =
+    document.getElementById("password");
+
+  const statusText =
+    document.getElementById("status");
+
+  const userDisplay =
+    document.getElementById("userDisplay");
+
+  const logoutButton =
+    document.getElementById("logoutButton");
+
+  const messages =
+    document.getElementById("messages");
+
+  const messageInput =
+    document.getElementById("messageInput");
+
+  const sendButton =
+    document.getElementById("sendButton");
+
+
+  let signupMode = false;
+  let currentUser = null;
+
+
+  // SWITCH LOGIN / SIGNUP
+  switchMode.onclick = () => {
+
+    signupMode = !signupMode;
+
+    if (signupMode) {
+
+      authTitle.textContent = "Create Account";
+
+      authButton.textContent = "Sign Up";
+
+      usernameInput.classList.remove("hidden");
+
+      switchMode.textContent =
+        "Already have an account? Log In";
+
+    } else {
+
+      authTitle.textContent = "Log In";
+
+      authButton.textContent = "Log In";
+
+      usernameInput.classList.add("hidden");
+
+      switchMode.textContent =
+        "Don't have an account? Sign Up";
     }
 
-    socket.on("chat message", (message) => {
-      const messageElement = document.createElement("div");
+    statusText.textContent = "";
+  };
 
-      messageElement.className = "message";
-      messageElement.textContent = message;
 
-      messages.appendChild(messageElement);
-
-      messages.scrollTop = messages.scrollHeight;
-    });
-
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        sendMessage();
-      }
-    });
-  </script>
-
-</body>
-</html>
+  // AUT
+```
