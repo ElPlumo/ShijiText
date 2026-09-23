@@ -4,17 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>My Chat</title>
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Socket.IO -->
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
@@ -22,76 +17,69 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #202225;
+      background: #111214;
       color: white;
     }
 
     button,
     input,
-    textarea {
-      font-family: Arial, sans-serif;
+    textarea,
+    select {
+      font-family: inherit;
     }
 
-    button {
-      cursor: pointer;
-    }
-
-
-    /* =========================
-       LOGIN
-    ========================= */
+    /* AUTH */
 
     #authScreen {
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #202225;
+      background: linear-gradient(135deg, #5865f2, #8b5cf6, #ec4899);
+      padding: 20px;
     }
 
     .authBox {
-      width: 400px;
-      max-width: 90%;
+      width: 100%;
+      max-width: 430px;
+      background: #1e1f22;
       padding: 35px;
-      background: #2f3136;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,.4);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
     }
 
     .authBox h1 {
       text-align: center;
-      margin: 0 0 8px;
+      margin-top: 0;
+      font-size: 32px;
     }
 
-    .subtitle {
+    .authBox p {
       text-align: center;
-      color: #b9bbbe;
-      margin-bottom: 25px;
+      color: #b5bac1;
     }
 
     .authBox input {
       width: 100%;
-      padding: 13px;
-      margin-bottom: 12px;
+      padding: 14px;
+      margin: 8px 0;
       border: none;
-      border-radius: 6px;
-      background: #40444b;
+      border-radius: 8px;
+      background: #111214;
       color: white;
-      font-size: 15px;
       outline: none;
-    }
-
-    .authBox input:focus {
-      outline: 2px solid #5865f2;
     }
 
     .authButton {
       width: 100%;
-      padding: 13px;
+      padding: 14px;
+      margin-top: 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       background: #5865f2;
       color: white;
+      font-weight: bold;
+      cursor: pointer;
       font-size: 16px;
     }
 
@@ -100,400 +88,410 @@
     }
 
     .switchButton {
-      width: 100%;
-      margin-top: 18px;
-      padding: 10px;
-      background: transparent;
+      background: none;
       border: none;
-      color: #00aff4;
+      color: #00a8fc;
+      cursor: pointer;
       font-size: 14px;
     }
 
-    .switchButton:hover {
-      text-decoration: underline;
-    }
-
-    #status {
-      text-align: center;
-      margin-top: 15px;
-      color: #ffcc00;
+    #authMessage {
+      margin-top: 12px;
       min-height: 20px;
+      color: #ff7b7b;
     }
 
-    .hidden {
-      display: none !important;
-    }
-
-
-    /* =========================
-       CHAT
-    ========================= */
+    /* CHAT */
 
     #chatScreen {
       display: none;
       height: 100vh;
+      overflow: hidden;
+    }
+
+    .app {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #1e1f22;
+      border-right: 1px solid #111214;
+      display: flex;
       flex-direction: column;
     }
 
-    #topBar {
-      height: 60px;
-      background: #2f3136;
+    .serverTitle {
+      padding: 18px;
+      font-size: 20px;
+      font-weight: bold;
+      border-bottom: 1px solid #111214;
+    }
+
+    .rooms {
+      padding: 12px;
+      flex: 1;
+    }
+
+    .room {
+      padding: 12px;
+      margin-bottom: 5px;
+      border-radius: 7px;
+      cursor: pointer;
+      color: #b5bac1;
+    }
+
+    .room:hover,
+    .room.active {
+      background: #35373c;
+      color: white;
+    }
+
+    .userPanel {
+      padding: 12px;
+      background: #111214;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 18px;
-      border-bottom: 1px solid #202225;
+      gap: 10px;
     }
 
-    #topBarLeft {
-      font-size: 18px;
-    }
-
-    #currentUser {
-      color: #b9bbbe;
-      font-size: 14px;
-      margin-left: 10px;
-    }
-
-    #topButtons {
+    .smallAvatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #5865f2;
       display: flex;
-      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
     }
 
-    .topButton {
+    .userInfo {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .userName {
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .userStatus {
+      color: #23a55a;
+      font-size: 12px;
+    }
+
+    .profileButton,
+    .logoutButton {
       border: none;
       border-radius: 6px;
-      padding: 9px 14px;
+      padding: 7px;
+      cursor: pointer;
       color: white;
+    }
+
+    .profileButton {
       background: #5865f2;
     }
 
-    .topButton:hover {
-      background: #4752c4;
-    }
-
-    #logoutButton {
+    .logoutButton {
       background: #ed4245;
     }
 
-    #logoutButton:hover {
-      background: #c03537;
+    /* MAIN CHAT */
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .chatHeader {
+      height: 60px;
+      background: #1e1f22;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 18px;
+      font-weight: bold;
+      border-bottom: 1px solid #111214;
     }
 
     #messages {
       flex: 1;
       overflow-y: auto;
       padding: 20px;
+      background: #313338;
     }
 
     .message {
-      background: #2f3136;
-      padding: 10px 14px;
-      margin-bottom: 10px;
-      border-radius: 8px;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
-    .messageUser {
+    .messageAvatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #5865f2;
+      flex-shrink: 0;
+    }
+
+    .messageContent {
+      min-width: 0;
+    }
+
+    .messageTop {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .messageUsername {
       font-weight: bold;
-      color: #7289da;
+      cursor: pointer;
+    }
+
+    .messageUsername:hover {
+      text-decoration: underline;
+    }
+
+    .timestamp {
+      color: #949ba4;
+      font-size: 11px;
     }
 
     .messageText {
       margin-top: 4px;
-      word-break: break-word;
+      color: #dbdee1;
+      word-wrap: break-word;
     }
 
-    #messageArea {
+    .chatInputArea {
+      padding: 15px;
+      background: #313338;
+    }
+
+    .chatForm {
       display: flex;
       gap: 10px;
-      padding: 15px;
-      background: #2f3136;
     }
 
     #messageInput {
       flex: 1;
-      padding: 13px;
-      background: #40444b;
+      background: #383a40;
       border: none;
-      border-radius: 7px;
+      border-radius: 8px;
+      padding: 14px;
       color: white;
       outline: none;
       font-size: 15px;
     }
 
     #sendButton {
-      width: 80px;
       border: none;
-      border-radius: 7px;
       background: #5865f2;
       color: white;
+      padding: 0 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
+    #sendButton:hover {
+      background: #4752c4;
+    }
 
-    /* =========================
-       PROFILE OVERLAY
-    ========================= */
+    /* PROFILE MODAL */
 
-    #profileOverlay {
+    #profileModal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.7);
+      background: rgba(0,0,0,.75);
+      z-index: 100;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      z-index: 100;
       overflow-y: auto;
     }
 
-    #profileEditor {
-      width: 900px;
-      max-width: 100%;
-      background: #2f3136;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,.6);
-    }
-
-
-    /* =========================
-       PROFILE HEADER
-    ========================= */
-
-    #profileHeader {
-      height: 150px;
-      background: #5865f2;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-
-    #closeProfile {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 35px;
-      height: 35px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(0,0,0,.5);
-      color: white;
-      font-size: 20px;
-    }
-
-    #closeProfile:hover {
-      background: rgba(0,0,0,.8);
-    }
-
-
-    /* =========================
-       PROFILE CONTENT
-    ========================= */
-
-    #profileContent {
+    .profileEditor {
+      width: 100%;
+      max-width: 850px;
+      background: #1e1f22;
+      border-radius: 15px;
+      padding: 25px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 25px;
-      padding: 25px;
     }
 
-    @media (max-width: 700px) {
-
-      #profileContent {
-        grid-template-columns: 1fr;
-      }
-
+    .profileEditor h2 {
+      grid-column: 1 / -1;
+      margin: 0;
     }
 
-
-    /* =========================
-       EDITOR
-    ========================= */
-
-    #editorSection h2,
-    #previewSection h2 {
-      margin-top: 0;
-    }
-
-    .field {
-      margin-bottom: 15px;
-    }
-
-    .field label {
+    .editorFields label {
       display: block;
-      margin-bottom: 6px;
-      color: #b9bbbe;
+      color: #b5bac1;
       font-size: 13px;
-      font-weight: bold;
-      text-transform: uppercase;
+      margin-top: 12px;
+      margin-bottom: 5px;
     }
 
-    .field input,
-    .field textarea,
-    .field select {
+    .editorFields input,
+    .editorFields textarea,
+    .editorFields select {
       width: 100%;
       padding: 11px;
-      background: #40444b;
-      color: white;
+      border-radius: 7px;
       border: none;
-      border-radius: 6px;
+      background: #111214;
+      color: white;
       outline: none;
     }
 
-    .field textarea {
-      min-height: 90px;
+    .editorFields textarea {
+      min-height: 80px;
       resize: vertical;
     }
 
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      outline: 2px solid #5865f2;
+    .colorRow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
-    #colorInput {
-      height: 45px;
-      padding: 3px;
+    #accentColor {
+      width: 55px;
+      height: 40px;
+      padding: 2px;
     }
 
-    #saveProfile {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 7px;
-      background: #43b581;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-    }
-
-    #saveProfile:hover {
-      background: #369b6e;
-    }
-
-    #profileStatus {
-      text-align: center;
-      margin-top: 12px;
-      color: #ffcc00;
-      min-height: 20px;
-    }
-
-
-    /* =========================
-       PROFILE PREVIEW
-    ========================= */
-
-    #profileCard {
-      background: #18191c;
+    .preview {
       border-radius: 12px;
       overflow: hidden;
+      background: #313338;
+      height: fit-content;
     }
 
-    #previewBanner {
-      height: 120px;
+    .previewBanner {
+      height: 130px;
       background: #5865f2;
       background-size: cover;
       background-position: center;
     }
 
-    #previewBody {
-      padding: 0 20px 20px;
+    .previewBody {
+      padding: 20px;
       position: relative;
     }
 
-    #previewAvatar {
-      width: 90px;
-      height: 90px;
+    .previewAvatar {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      border: 6px solid #18191c;
-      background: #5865f2;
       object-fit: cover;
-      margin-top: -45px;
-      display: block;
+      background: #5865f2;
+      border: 5px solid #313338;
+      margin-top: -55px;
     }
 
-    #previewName {
-      font-size: 23px;
+    .previewName {
+      font-size: 22px;
       font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .previewUsername {
+      color: #949ba4;
+    }
+
+    .previewStatus {
+      margin-top: 12px;
+      color: #23a55a;
+    }
+
+    .previewBio {
+      margin-top: 12px;
+      color: #dbdee1;
+      white-space: pre-wrap;
+    }
+
+    .previewEmoji {
+      font-size: 30px;
       margin-top: 10px;
     }
 
-    #previewUsername {
-      color: #b9bbbe;
-      margin-top: 3px;
+    .profileActions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
     }
 
-    #previewStatus {
-      margin-top: 12px;
-      color: #b9bbbe;
+    .saveButton,
+    .cancelButton {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
     }
 
-    #previewBio {
-      margin-top: 15px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-break: break-word;
+    .saveButton {
+      background: #23a55a;
     }
 
-    #previewEmoji {
-      font-size: 35px;
-      margin-top: 15px;
+    .cancelButton {
+      background: #4e5058;
     }
 
-    #previewLinks {
-      margin-top: 15px;
-    }
+    @media (max-width: 750px) {
+      .sidebar {
+        width: 190px;
+      }
 
-    #previewLinks a {
-      color: #00aff4;
-      text-decoration: none;
-    }
+      .profileEditor {
+        grid-template-columns: 1fr;
+      }
 
-    #previewLinks a:hover {
-      text-decoration: underline;
+      .profileEditor h2,
+      .profileActions {
+        grid-column: auto;
+      }
     }
-
-    #previewDecoration {
-      margin-top: 15px;
-      padding: 8px;
-      border-radius: 6px;
-      background: #2f3136;
-      color: #b9bbbe;
-    }
-
   </style>
 </head>
 
 <body>
 
-
-  <!-- =====================================================
-       AUTH SCREEN
-  ====================================================== -->
+  <!-- AUTH SCREEN -->
 
   <div id="authScreen">
 
     <div class="authBox">
 
-      <h1 id="authTitle">
-        Welcome Back!
-      </h1>
+      <h1 id="authTitle">Welcome Back</h1>
+      <p id="authSubtitle">Log in to your account</p>
 
-      <div
-        class="subtitle"
-        id="authSubtitle"
-      >
-        Log in to continue to My Chat
+      <div id="usernameContainer" style="display:none;">
+        <input
+          id="usernameInput"
+          type="text"
+          placeholder="Username"
+          maxlength="32"
+        >
       </div>
-
-
-      <input
-        id="usernameInput"
-        class="hidden"
-        type="text"
-        placeholder="Username"
-      >
-
 
       <input
         id="emailInput"
@@ -501,412 +499,293 @@
         placeholder="Email"
       >
 
-
       <input
         id="passwordInput"
         type="password"
         placeholder="Password"
       >
 
-
-      <button
-        class="authButton"
-        id="authButton"
-        type="button"
-      >
+      <button class="authButton" id="authButton">
         Log In
       </button>
 
+      <p>
+        <span id="switchText">Don't have an account?</span>
+        <button class="switchButton" id="switchButton">
+          Sign Up
+        </button>
+      </p>
 
-      <button
-        class="switchButton"
-        id="switchButton"
-        type="button"
-      >
-        Don't have an account? Sign Up
-      </button>
-
-
-      <div id="status"></div>
+      <div id="authMessage"></div>
 
     </div>
 
   </div>
 
 
-
-  <!-- =====================================================
-       CHAT SCREEN
-  ====================================================== -->
+  <!-- CHAT SCREEN -->
 
   <div id="chatScreen">
 
+    <div class="app">
 
-    <div id="topBar">
+      <aside class="sidebar">
 
-      <div id="topBarLeft">
+        <div class="serverTitle">
+          💬 My Chat
+        </div>
 
-        💬 <strong>My Chat</strong>
+        <div class="rooms">
 
-        <span id="currentUser"></span>
-
-      </div>
-
-
-      <div id="topButtons">
-
-        <button
-          class="topButton"
-          id="profileButton"
-          type="button"
-        >
-          👤 Profile
-        </button>
-
-
-        <button
-          class="topButton"
-          id="logoutButton"
-          type="button"
-        >
-          Log Out
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div id="messages"></div>
-
-
-    <div id="messageArea">
-
-      <input
-        id="messageInput"
-        type="text"
-        placeholder="Message..."
-      >
-
-      <button
-        id="sendButton"
-        type="button"
-      >
-        Send
-      </button>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- =====================================================
-       PROFILE EDITOR
-  ====================================================== -->
-
-  <div id="profileOverlay">
-
-    <div id="profileEditor">
-
-
-      <div id="profileHeader">
-
-        <button
-          id="closeProfile"
-          type="button"
-        >
-          ×
-        </button>
-
-      </div>
-
-
-      <div id="profileContent">
-
-
-        <!-- =========================
-             EDIT PROFILE
-        ========================== -->
-
-        <section id="editorSection">
-
-          <h2>Edit Profile</h2>
-
-
-          <div class="field">
-
-            <label>
-              Display Name
-            </label>
-
-            <input
-              id="displayNameInput"
-              type="text"
-              placeholder="Your display name"
-            >
-
+          <div class="room active">
+            💬 general
           </div>
 
-
-          <div class="field">
-
-            <label>
-              Username
-            </label>
-
-            <input
-              id="profileUsernameInput"
-              type="text"
-              placeholder="Username"
-            >
-
+          <div class="room">
+            🎮 gaming
           </div>
 
-
-          <div class="field">
-
-            <label>
-              Profile Picture URL
-            </label>
-
-            <input
-              id="avatarInput"
-              type="url"
-              placeholder="https://example.com/avatar.png"
-            >
-
+          <div class="room">
+            🎨 art
           </div>
 
-
-          <div class="field">
-
-            <label>
-              Banner URL
-            </label>
-
-            <input
-              id="bannerInput"
-              type="url"
-              placeholder="https://example.com/banner.png"
-            >
-
+          <div class="room">
+            😂 memes
           </div>
 
+        </div>
 
-          <div class="field">
+        <div class="userPanel">
 
-            <label>
-              Bio
-            </label>
-
-            <textarea
-              id="bioInput"
-              placeholder="Tell people about yourself..."
-            ></textarea>
-
+          <div id="currentAvatar" class="smallAvatar">
+            👤
           </div>
 
-
-          <div class="field">
-
-            <label>
-              Custom Status
-            </label>
-
-            <input
-              id="customStatusInput"
-              type="text"
-              placeholder="What are you up to?"
-            >
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Favorite Emoji
-            </label>
-
-            <input
-              id="emojiInput"
-              type="text"
-              placeholder="😀"
-              maxlength="10"
-            >
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Accent Color
-            </label>
-
-            <input
-              id="colorInput"
-              type="color"
-              value="#5865F2"
-            >
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Website
-            </label>
-
-            <input
-              id="websiteInput"
-              type="url"
-              placeholder="https://example.com"
-            >
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Profile Decoration
-            </label>
-
-            <select id="decorationInput">
-
-              <option value="">
-                None
-              </option>
-
-              <option value="✨ Sparkles">
-                ✨ Sparkles
-              </option>
-
-              <option value="⭐ Stars">
-                ⭐ Stars
-              </option>
-
-              <option value="🌈 Rainbow">
-                🌈 Rainbow
-              </option>
-
-              <option value="💫 Cosmic">
-                💫 Cosmic
-              </option>
-
-              <option value="🔥 Fire">
-                🔥 Fire
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Profile Effect
-            </label>
-
-            <select id="effectInput">
-
-              <option value="">
-                None
-              </option>
-
-              <option value="Glow">
-                Glow
-              </option>
-
-              <option value="Shadow">
-                Shadow
-              </option>
-
-              <option value="Glass">
-                Glass
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <button
-            id="saveProfile"
-            type="button"
-          >
-            Save Profile
-          </button>
-
-
-          <div id="profileStatus"></div>
-
-        </section>
-
-
-
-        <!-- =========================
-             PREVIEW
-        ========================== -->
-
-        <section id="previewSection">
-
-          <h2>Preview</h2>
-
-
-          <div id="profileCard">
-
-            <div id="previewBanner"></div>
-
-
-            <div id="previewBody">
-
-              <img
-                id="previewAvatar"
-                src=""
-                alt="Profile picture"
-              >
-
-
-              <div id="previewName">
-                Your Name
-              </div>
-
-
-              <div id="previewUsername">
-                @username
-              </div>
-
-
-              <div id="previewStatus">
-                No status
-              </div>
-
-
-              <div id="previewBio">
-                Your bio will appear here.
-              </div>
-
-
-              <div id="previewEmoji">
-                😀
-              </div>
-
-
-              <div id="previewLinks"></div>
-
-
-              <div id="previewDecoration"></div>
-
+          <div class="userInfo">
+            <div class="userName" id="currentUsername">
+              User
             </div>
 
+            <div class="userStatus">
+              ● Online
+            </div>
           </div>
 
-        </section>
+          <button class="profileButton" id="openProfile">
+            👤
+          </button>
+
+          <button class="logoutButton" id="logoutButton">
+            ↪
+          </button>
+
+        </div>
+
+      </aside>
+
+
+      <main class="main">
+
+        <div class="chatHeader">
+          # general
+        </div>
+
+        <div id="messages"></div>
+
+        <div class="chatInputArea">
+
+          <form class="chatForm" id="chatForm">
+
+            <input
+              id="messageInput"
+              type="text"
+              placeholder="Message #general"
+              autocomplete="off"
+              maxlength="2000"
+            >
+
+            <button id="sendButton" type="submit">
+              Send
+            </button>
+
+          </form>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- PROFILE MODAL -->
+
+  <div id="profileModal">
+
+    <div class="profileEditor">
+
+      <h2>Customize Your Profile ✨</h2>
+
+      <div class="editorFields">
+
+        <label>Display Name</label>
+        <input id="displayNameInput" maxlength="32">
+
+        <label>Username</label>
+        <input id="profileUsernameInput" maxlength="32">
+
+        <label>Profile Picture URL</label>
+        <input
+          id="avatarInput"
+          placeholder="https://example.com/image.png"
+        >
+
+        <label>Banner URL</label>
+        <input
+          id="bannerInput"
+          placeholder="https://example.com/banner.png"
+        >
+
+        <label>Bio</label>
+        <textarea
+          id="bioInput"
+          maxlength="190"
+          placeholder="Tell people about yourself..."
+        ></textarea>
+
+        <label>Custom Status</label>
+        <input
+          id="customStatusInput"
+          maxlength="100"
+          placeholder="What are you doing?"
+        >
+
+        <label>Favorite Emoji</label>
+        <input
+          id="emojiInput"
+          maxlength="4"
+          placeholder="😀"
+        >
+
+        <label>Accent Color</label>
+
+        <div class="colorRow">
+          <input id="accentColor" type="color" value="#5865F2">
+          <span id="colorText">#5865F2</span>
+        </div>
+
+        <label>Website</label>
+        <input
+          id="websiteInput"
+          placeholder="https://..."
+        >
+
+        <label>Social Link</label>
+        <input
+          id="socialInput"
+          placeholder="https://..."
+        >
+
+        <label>Profile Decoration</label>
+
+        <select id="decorationInput">
+          <option value="">None</option>
+          <option value="✨ Sparkles">✨ Sparkles</option>
+          <option value="⭐ Stars">⭐ Stars</option>
+          <option value="🌈 Rainbow">🌈 Rainbow</option>
+          <option value="💫 Cosmic">💫 Cosmic</option>
+          <option value="🔥 Fire">🔥 Fire</option>
+        </select>
+
+        <label>Profile Effect</label>
+
+        <select id="effectInput">
+          <option value="">None</option>
+          <option value="glow">Glow</option>
+          <option value="shadow">Shadow</option>
+          <option value="glass">Glass</option>
+        </select>
+
+      </div>
+
+
+      <div class="preview" id="profilePreview">
+
+        <div
+          class="previewBanner"
+          id="previewBanner"
+        ></div>
+
+        <div class="previewBody">
+
+          <img
+            id="previewAvatar"
+            class="previewAvatar"
+            src=""
+            alt=""
+          >
+
+          <div
+            class="previewName"
+            id="previewName"
+          >
+            New User
+          </div>
+
+          <div
+            class="previewUsername"
+            id="previewUsername"
+          >
+            @username
+          </div>
+
+          <div
+            class="previewStatus"
+            id="previewStatus"
+          >
+            ● Online
+          </div>
+
+          <div
+            class="previewBio"
+            id="previewBio"
+          >
+            Your bio will appear here.
+          </div>
+
+          <div
+            class="previewEmoji"
+            id="previewEmoji"
+          >
+            😀
+          </div>
+
+          <div
+            id="previewDecoration"
+            style="margin-top:10px;"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <div class="profileActions">
+
+        <button
+          class="cancelButton"
+          id="closeProfile"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="saveButton"
+          id="saveProfile"
+        >
+          Save Profile
+        </button>
 
       </div>
 
@@ -915,253 +794,140 @@
   </div>
 
 
+  <script>
 
-<script>
+    /* =========================
+       SUPABASE
+    ========================= */
 
-  /* =====================================================
-     SUPABASE
-  ====================================================== */
+    const SUPABASE_URL =
+      "https://tscporvkmgkwymrftzyn.supabase.co";
 
-  const SUPABASE_URL =
-    "https://tscporvkmgkwymrftzyn.supabase.co";
+    const SUPABASE_KEY =
+      "sb_publishable_f-OuNvj9jXyjcL0sZ3awvg__HZ3S_Ry";
 
-  const SUPABASE_KEY =
-    "sb_publishable_f-OuNvj9jXyjcL0sZ3awvg__HZ3S_Ry";
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
 
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+    /* =========================
+       SOCKET.IO
+    ========================= */
 
+    const socket =
+      io("https://chat-server-2h9q.onrender.com");
 
 
-  /* =====================================================
-     SOCKET.IO
-  ====================================================== */
+    /* =========================
+       VARIABLES
+    ========================= */
 
-  const socket =
-    io("https://chat-server-2h9q.onrender.com");
+    let loggedInUser = null;
+    let currentProfile = null;
+    let authMode = "login";
 
 
+    /* =========================
+       ELEMENTS
+    ========================= */
 
-  /* =====================================================
-     AUTH ELEMENTS
-  ====================================================== */
+    const authScreen =
+      document.getElementById("authScreen");
 
-  const authScreen =
-    document.getElementById("authScreen");
+    const chatScreen =
+      document.getElementById("chatScreen");
 
-  const chatScreen =
-    document.getElementById("chatScreen");
+    const authTitle =
+      document.getElementById("authTitle");
 
-  const authTitle =
-    document.getElementById("authTitle");
+    const authSubtitle =
+      document.getElementById("authSubtitle");
 
-  const authSubtitle =
-    document.getElementById("authSubtitle");
+    const usernameContainer =
+      document.getElementById("usernameContainer");
 
-  const authButton =
-    document.getElementById("authButton");
+    const usernameInput =
+      document.getElementById("usernameInput");
 
-  const switchButton =
-    document.getElementById("switchButton");
+    const emailInput =
+      document.getElementById("emailInput");
 
-  const usernameInput =
-    document.getElementById("usernameInput");
+    const passwordInput =
+      document.getElementById("passwordInput");
 
-  const emailInput =
-    document.getElementById("emailInput");
+    const authButton =
+      document.getElementById("authButton");
 
-  const passwordInput =
-    document.getElementById("passwordInput");
+    const switchButton =
+      document.getElementById("switchButton");
 
-  const status =
-    document.getElementById("status");
+    const switchText =
+      document.getElementById("switchText");
 
+    const authMessage =
+      document.getElementById("authMessage");
 
+    const messages =
+      document.getElementById("messages");
 
-  /* =====================================================
-     CHAT ELEMENTS
-  ====================================================== */
+    const messageInput =
+      document.getElementById("messageInput");
 
-  const currentUser =
-    document.getElementById("currentUser");
+    const chatForm =
+      document.getElementById("chatForm");
 
-  const logoutButton =
-    document.getElementById("logoutButton");
+    const currentUsername =
+      document.getElementById("currentUsername");
 
-  const profileButton =
-    document.getElementById("profileButton");
+    const currentAvatar =
+      document.getElementById("currentAvatar");
 
-  const messages =
-    document.getElementById("messages");
 
-  const messageInput =
-    document.getElementById("messageInput");
+    /* =========================
+       AUTH MODE
+    ========================= */
 
-  const sendButton =
-    document.getElementById("sendButton");
+    switchButton.addEventListener("click", () => {
 
+      if (authMode === "login") {
 
-
-  /* =====================================================
-     PROFILE ELEMENTS
-  ====================================================== */
-
-  const profileOverlay =
-    document.getElementById("profileOverlay");
-
-  const closeProfile =
-    document.getElementById("closeProfile");
-
-  const displayNameInput =
-    document.getElementById("displayNameInput");
-
-  const profileUsernameInput =
-    document.getElementById("profileUsernameInput");
-
-  const avatarInput =
-    document.getElementById("avatarInput");
-
-  const bannerInput =
-    document.getElementById("bannerInput");
-
-  const bioInput =
-    document.getElementById("bioInput");
-
-  const customStatusInput =
-    document.getElementById("customStatusInput");
-
-  const emojiInput =
-    document.getElementById("emojiInput");
-
-  const colorInput =
-    document.getElementById("colorInput");
-
-  const websiteInput =
-    document.getElementById("websiteInput");
-
-  const decorationInput =
-    document.getElementById("decorationInput");
-
-  const effectInput =
-    document.getElementById("effectInput");
-
-  const saveProfile =
-    document.getElementById("saveProfile");
-
-  const profileStatus =
-    document.getElementById("profileStatus");
-
-
-  const previewBanner =
-    document.getElementById("previewBanner");
-
-  const previewAvatar =
-    document.getElementById("previewAvatar");
-
-  const previewName =
-    document.getElementById("previewName");
-
-  const previewUsername =
-    document.getElementById("previewUsername");
-
-  const previewStatus =
-    document.getElementById("previewStatus");
-
-  const previewBio =
-    document.getElementById("previewBio");
-
-  const previewEmoji =
-    document.getElementById("previewEmoji");
-
-  const previewLinks =
-    document.getElementById("previewLinks");
-
-  const previewDecoration =
-    document.getElementById("previewDecoration");
-
-
-
-  /* =====================================================
-     VARIABLES
-  ====================================================== */
-
-  let signupMode = false;
-  let loggedInUser = null;
-
-
-
-  /* =====================================================
-     LOGIN / SIGN UP SWITCH
-  ====================================================== */
-
-  switchButton.addEventListener(
-    "click",
-    function () {
-
-      signupMode = !signupMode;
-
-      status.textContent = "";
-
-
-      if (signupMode) {
-
-        authTitle.textContent =
-          "Create Your Account";
-
-        authSubtitle.textContent =
-          "Make your account for My Chat";
-
-        authButton.textContent =
-          "Sign Up";
-
-        usernameInput.classList.remove(
-          "hidden"
-        );
-
-        usernameInput.focus();
-
-        switchButton.textContent =
-          "Already have an account? Log In";
-
+        authMode = "signup";
+
+        authTitle.textContent = "Create Account";
+        authSubtitle.textContent = "Make your new account";
+        usernameContainer.style.display = "block";
+        authButton.textContent = "Sign Up";
+        switchText.textContent = "Already have an account?";
+        switchButton.textContent = "Log In";
 
       } else {
 
-        authTitle.textContent =
-          "Welcome Back!";
+        authMode = "login";
 
-        authSubtitle.textContent =
-          "Log in to continue to My Chat";
-
-        authButton.textContent =
-          "Log In";
-
-        usernameInput.classList.add(
-          "hidden"
-        );
-
-        emailInput.focus();
-
-        switchButton.textContent =
-          "Don't have an account? Sign Up";
+        authTitle.textContent = "Welcome Back";
+        authSubtitle.textContent = "Log in to your account";
+        usernameContainer.style.display = "none";
+        authButton.textContent = "Log In";
+        switchText.textContent = "Don't have an account?";
+        switchButton.textContent = "Sign Up";
 
       }
 
-    }
-  );
+      authMessage.textContent = "";
+
+    });
 
 
+    /* =========================
+       AUTH BUTTON
+    ========================= */
 
-  /* =====================================================
-     SIGN UP / LOGIN
-  ====================================================== */
+    authButton.addEventListener("click", async () => {
 
-  authButton.addEventListener(
-    "click",
-    async function () {
+      authMessage.textContent = "";
 
       const email =
         emailInput.value.trim();
@@ -1169,831 +935,463 @@
       const password =
         passwordInput.value;
 
-      const username =
-        usernameInput.value.trim();
-
-
-      if (!email) {
-
-        status.textContent =
-          "Please enter your email.";
-
+      if (!email || !password) {
+        authMessage.textContent =
+          "Please enter your email and password.";
         return;
       }
 
 
-      if (!password) {
+      /* SIGN UP */
 
-        status.textContent =
-          "Please enter your password.";
+      if (authMode === "signup") {
 
-        return;
-      }
-
-
-      /* =========================
-         SIGN UP
-      ========================== */
-
-      if (signupMode) {
+        const username =
+          usernameInput.value.trim();
 
         if (!username) {
-
-          status.textContent =
+          authMessage.textContent =
             "Please choose a username.";
-
           return;
         }
-
 
         if (username.length < 3) {
-
-          status.textContent =
+          authMessage.textContent =
             "Username must be at least 3 characters.";
-
           return;
         }
-
-
-        status.textContent =
-          "Creating your account...";
 
 
         const { data, error } =
           await supabaseClient.auth.signUp({
-
-            email: email,
-
-            password: password
-
+            email,
+            password
           });
 
 
         if (error) {
-
-          status.textContent =
+          authMessage.textContent =
             error.message;
-
           return;
         }
 
 
-        if (data.user) {
-
-          const { error: profileError } =
-            await supabaseClient
-              .from("profiles")
-              .insert({
-
-                id: data.user.id,
-
-                username: username,
-
-                display_name: username
-
-              });
-
-
-          if (profileError) {
-
-            status.textContent =
-              "Account created, but profile setup failed: " +
-              profileError.message;
-
-            return;
-          }
-
+        if (!data.user) {
+          authMessage.textContent =
+            "Account could not be created.";
+          return;
         }
 
 
-        status.textContent =
-          "Account created! You can now log in.";
+        const { error: profileError } =
+          await supabaseClient
+            .from("profiles")
+            .insert({
+              id: data.user.id,
+              username: username,
+              display_name: username
+            });
 
-        return;
+
+        if (profileError) {
+          authMessage.textContent =
+            profileError.message;
+          return;
+        }
+
+
+        loggedInUser = data.user;
+
+        await loadProfile();
+
+        showChat();
 
       }
 
 
+      /* LOGIN */
 
-      /* =========================
-         LOGIN
-      ========================== */
+      else {
 
-      status.textContent =
-        "Logging in...";
+        const { data, error } =
+          await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
 
 
-      const { error } =
-        await supabaseClient.auth.signInWithPassword({
+        if (error) {
+          authMessage.textContent =
+            error.message;
+          return;
+        }
 
-          email: email,
 
-          password: password
+        loggedInUser = data.user;
 
-        });
+        await loadProfile();
+
+        showChat();
+
+      }
+
+    });
+
+
+    /* =========================
+       CHECK EXISTING SESSION
+    ========================= */
+
+    async function checkSession() {
+
+      const { data } =
+        await supabaseClient.auth.getSession();
+
+      if (data.session) {
+
+        loggedInUser =
+          data.session.user;
+
+        await loadProfile();
+
+        showChat();
+
+      }
+
+    }
+
+    checkSession();
+
+
+    /* =========================
+       LOAD PROFILE
+    ========================= */
+
+    async function loadProfile() {
+
+      if (!loggedInUser) return;
+
+
+      let { data, error } =
+        await supabaseClient
+          .from("profiles")
+          .select("*")
+          .eq("id", loggedInUser.id)
+          .maybeSingle();
 
 
       if (error) {
-
-        status.textContent =
-          error.message;
-
-        return;
+        console.error(
+          "Profile loading error:",
+          error
+        );
       }
 
 
-      await showChat();
+      /* If the profile somehow doesn't exist,
+         create one automatically. */
 
-    }
-  );
+      if (!data) {
 
-
-
-  /* =====================================================
-     SHOW CHAT
-  ====================================================== */
-
-  async function showChat() {
-
-    const { data } =
-      await supabaseClient.auth.getUser();
-
-    loggedInUser =
-      data.user;
+        const fallbackUsername =
+          loggedInUser.email
+            ? loggedInUser.email.split("@")[0]
+            : "User";
 
 
-    if (!loggedInUser) {
-      return;
-    }
+        const { data: newProfile } =
+          await supabaseClient
+            .from("profiles")
+            .insert({
+              id: loggedInUser.id,
+              username: fallbackUsername,
+              display_name: fallbackUsername
+            })
+            .select()
+            .single();
 
 
-    await updateUserDisplay();
-
-
-    authScreen.style.display =
-      "none";
-
-    chatScreen.style.display =
-      "flex";
-
-  }
-
-
-
-  /* =====================================================
-     UPDATE USER DISPLAY
-  ====================================================== */
-
-  async function updateUserDisplay() {
-
-    if (!loggedInUser) {
-      return;
-    }
-
-
-    const { data: profile } =
-      await supabaseClient
-        .from("profiles")
-        .select(
-          "username, display_name"
-        )
-        .eq(
-          "id",
-          loggedInUser.id
-        )
-        .maybeSingle();
-
-
-    if (profile) {
-
-      currentUser.textContent =
-        "@" + profile.username;
-
-    } else {
-
-      currentUser.textContent =
-        "@" + loggedInUser.email;
-
-    }
-
-  }
-
-
-
-  /* =====================================================
-     LOG OUT
-  ====================================================== */
-
-  logoutButton.addEventListener(
-    "click",
-    async function () {
-
-      await supabaseClient.auth.signOut();
-
-      loggedInUser = null;
-
-      chatScreen.style.display =
-        "none";
-
-      authScreen.style.display =
-        "flex";
-
-      emailInput.value = "";
-
-      passwordInput.value = "";
-
-      usernameInput.value = "";
-
-      status.textContent = "";
-
-    }
-  );
-
-
-
-  /* =====================================================
-     OPEN PROFILE
-  ====================================================== */
-
-  profileButton.addEventListener(
-    "click",
-    async function () {
-
-      await loadProfile();
-
-      profileOverlay.style.display =
-        "flex";
-
-    }
-  );
-
-
-
-  /* =====================================================
-     CLOSE PROFILE
-  ====================================================== */
-
-  closeProfile.addEventListener(
-    "click",
-    function () {
-
-      profileOverlay.style.display =
-        "none";
-
-    }
-  );
-
-
-  profileOverlay.addEventListener(
-    "click",
-    function (event) {
-
-      if (event.target === profileOverlay) {
-
-        profileOverlay.style.display =
-          "none";
+        data = newProfile;
 
       }
 
-    }
-  );
 
+      currentProfile = data;
 
+      updateCurrentUserUI();
 
-  /* =====================================================
-     LOAD PROFILE
-  ====================================================== */
-
-  async function loadProfile() {
-
-    if (!loggedInUser) {
-      return;
     }
 
 
-    profileStatus.textContent =
-      "Loading...";
+    /* =========================
+       UPDATE USER UI
+    ========================= */
+
+    function updateCurrentUserUI() {
+
+      if (!currentProfile) return;
 
 
-    const { data, error } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq(
-          "id",
-          loggedInUser.id
-        )
-        .maybeSingle();
-
-
-    if (error) {
-
-      profileStatus.textContent =
-        error.message;
-
-      return;
-    }
-
-
-    if (!data) {
-
-      profileStatus.textContent =
-        "No profile found.";
-
-      return;
-    }
-
-
-    displayNameInput.value =
-      data.display_name || "";
-
-    profileUsernameInput.value =
-      data.username || "";
-
-    avatarInput.value =
-      data.avatar_url || "";
-
-    bannerInput.value =
-      data.banner_url || "";
-
-    bioInput.value =
-      data.bio || "";
-
-    customStatusInput.value =
-      data.custom_status || "";
-
-    emojiInput.value =
-      data.favorite_emoji || "😀";
-
-    colorInput.value =
-      data.accent_color || "#5865F2";
-
-    websiteInput.value =
-      data.website_url || "";
-
-    decorationInput.value =
-      data.profile_decoration || "";
-
-    effectInput.value =
-      data.profile_effect || "";
-
-
-    profileStatus.textContent = "";
-
-
-    updatePreview();
-
-  }
-
-
-
-  /* =====================================================
-     SAVE PROFILE
-  ====================================================== */
-
-  saveProfile.addEventListener(
-    "click",
-    async function () {
-
-      if (!loggedInUser) {
-        return;
-      }
+      const displayName =
+        currentProfile.display_name ||
+        currentProfile.username ||
+        "User";
 
 
       const username =
-        profileUsernameInput.value.trim();
-
-      const displayName =
-        displayNameInput.value.trim();
+        currentProfile.username ||
+        "user";
 
 
-      if (!username) {
+      currentUsername.textContent =
+        displayName;
 
-        profileStatus.textContent =
-          "Username cannot be empty.";
 
-        return;
+      if (currentProfile.avatar_url) {
+
+        currentAvatar.outerHTML = `
+          <img
+            id="currentAvatar"
+            class="smallAvatar"
+            src="${escapeHtml(currentProfile.avatar_url)}"
+            alt=""
+          >
+        `;
+
+      } else {
+
+        currentAvatar.textContent =
+          (displayName[0] || "U").toUpperCase();
+
       }
-
-
-      if (!displayName) {
-
-        profileStatus.textContent =
-          "Display name cannot be empty.";
-
-        return;
-      }
-
-
-      profileStatus.textContent =
-        "Saving...";
-
-
-      const { error } =
-        await supabaseClient
-          .from("profiles")
-          .update({
-
-            username:
-              username,
-
-            display_name:
-              displayName,
-
-            bio:
-              bioInput.value,
-
-            avatar_url:
-              avatarInput.value,
-
-            banner_url:
-              bannerInput.value,
-
-            accent_color:
-              colorInput.value,
-
-            custom_status:
-              customStatusInput.value,
-
-            favorite_emoji:
-              emojiInput.value,
-
-            website_url:
-              websiteInput.value,
-
-            profile_decoration:
-              decorationInput.value,
-
-            profile_effect:
-              effectInput.value,
-
-            updated_at:
-              new Date().toISOString()
-
-          })
-          .eq(
-            "id",
-            loggedInUser.id
-          );
-
-
-      if (error) {
-
-        profileStatus.textContent =
-          error.message;
-
-        return;
-      }
-
-
-      profileStatus.textContent =
-        "Profile saved! ✓";
-
-
-      await updateUserDisplay();
-
-      updatePreview();
-
-    }
-  );
-
-
-
-  /* =====================================================
-     LIVE PROFILE PREVIEW
-  ====================================================== */
-
-  const profileInputs = [
-
-    displayNameInput,
-
-    profileUsernameInput,
-
-    avatarInput,
-
-    bannerInput,
-
-    bioInput,
-
-    customStatusInput,
-
-    emojiInput,
-
-    colorInput,
-
-    websiteInput,
-
-    decorationInput,
-
-    effectInput
-
-  ];
-
-
-  profileInputs.forEach(
-    function (input) {
-
-      input.addEventListener(
-        "input",
-        updatePreview
-      );
-
-      input.addEventListener(
-        "change",
-        updatePreview
-      );
-
-    }
-  );
-
-
-
-  /* =====================================================
-     UPDATE PROFILE PREVIEW
-  ====================================================== */
-
-  function updatePreview() {
-
-    const name =
-      displayNameInput.value.trim() ||
-      "Your Name";
-
-    const username =
-      profileUsernameInput.value.trim() ||
-      "username";
-
-    const avatar =
-      avatarInput.value.trim();
-
-    const banner =
-      bannerInput.value.trim();
-
-    const bio =
-      bioInput.value.trim() ||
-      "Your bio will appear here.";
-
-    const customStatus =
-      customStatusInput.value.trim() ||
-      "No status";
-
-    const emoji =
-      emojiInput.value.trim() ||
-      "😀";
-
-    const color =
-      colorInput.value ||
-      "#5865F2";
-
-    const website =
-      websiteInput.value.trim();
-
-    const decoration =
-      decorationInput.value;
-
-    const effect =
-      effectInput.value;
-
-
-    /* NAME */
-
-    previewName.textContent =
-      name;
-
-
-    /* USERNAME */
-
-    previewUsername.textContent =
-      "@" + username;
-
-
-    /* BIO */
-
-    previewBio.textContent =
-      bio;
-
-
-    /* STATUS */
-
-    previewStatus.textContent =
-      "● " + customStatus;
-
-
-    /* EMOJI */
-
-    previewEmoji.textContent =
-      emoji;
-
-
-    /* COLOR */
-
-    previewBanner.style.backgroundColor =
-      color;
-
-    previewAvatar.style.backgroundColor =
-      color;
-
-
-    /* AVATAR */
-
-    if (avatar) {
-
-      previewAvatar.src =
-        avatar;
-
-    } else {
-
-      previewAvatar.removeAttribute(
-        "src"
-      );
-
-      previewAvatar.style.backgroundColor =
-        color;
 
     }
 
 
-    /* BANNER */
+    /* =========================
+       SHOW CHAT
+    ========================= */
 
-    if (banner) {
+    function showChat() {
 
-      previewBanner.style.backgroundImage =
-        "url('" +
-        banner.replace(/'/g, "%27") +
-        "')";
-
-    } else {
-
-      previewBanner.style.backgroundImage =
+      authScreen.style.display =
         "none";
 
-    }
+      chatScreen.style.display =
+        "block";
 
+      updateCurrentUserUI();
 
-    /* WEBSITE */
-
-    previewLinks.innerHTML = "";
-
-    if (website) {
-
-      const link =
-        document.createElement("a");
-
-      link.href =
-        website;
-
-      link.target =
-        "_blank";
-
-      link.rel =
-        "noopener noreferrer";
-
-      link.textContent =
-        "🔗 " + website;
-
-      previewLinks.appendChild(
-        link
-      );
+      messageInput.focus();
 
     }
 
 
-    /* DECORATION */
+    /* =========================
+       LOGOUT
+    ========================= */
 
-    previewDecoration.textContent =
-      decoration;
+    document
+      .getElementById("logoutButton")
+      .addEventListener("click", async () => {
 
+        await supabaseClient.auth.signOut();
 
-    /* EFFECT */
+        loggedInUser = null;
+        currentProfile = null;
 
-    if (effect === "Glow") {
+        chatScreen.style.display =
+          "none";
 
-      profileCard.style.boxShadow =
-        "0 0 25px " + color;
+        authScreen.style.display =
+          "flex";
 
-    } else if (effect === "Shadow") {
+        emailInput.value = "";
+        passwordInput.value = "";
+        usernameInput.value = "";
 
-      profileCard.style.boxShadow =
-        "0 15px 35px rgba(0,0,0,.8)";
-
-    } else if (effect === "Glass") {
-
-      profileCard.style.boxShadow =
-        "0 0 30px rgba(255,255,255,.15)";
-
-    } else {
-
-      profileCard.style.boxShadow =
-        "none";
-
-    }
-
-  }
+      });
 
 
+    /* =========================
+       SEND MESSAGE
+    ========================= */
 
-  /* =====================================================
-     SEND MESSAGE
-  ====================================================== */
+    chatForm.addEventListener("submit", (event) => {
 
-  function sendMessage() {
+      event.preventDefault();
 
-    const text =
-      messageInput.value.trim();
+      const text =
+        messageInput.value.trim();
 
-
-    if (!text) {
-      return;
-    }
+      if (!text || !loggedInUser || !currentProfile) {
+        return;
+      }
 
 
-    socket.emit(
-      "chat message",
-      {
+      /*
+        IMPORTANT:
+
+        Before, this was sending the user's email.
+
+        Now it sends the profile username,
+        display name, and profile picture.
+      */
+
+      socket.emit("chat message", {
 
         text: text,
 
+        userId: loggedInUser.id,
+
         username:
-          loggedInUser?.email ||
-          "User"
+          currentProfile.username ||
+          "user",
 
-      }
-    );
+        displayName:
+          currentProfile.display_name ||
+          currentProfile.username ||
+          "User",
 
+        avatar:
+          currentProfile.avatar_url ||
+          "",
 
-    messageInput.value = "";
+        timestamp:
+          new Date().toISOString()
 
-    messageInput.focus();
-
-  }
-
-
-  sendButton.addEventListener(
-    "click",
-    sendMessage
-  );
+      });
 
 
-  messageInput.addEventListener(
-    "keydown",
-    function (event) {
+      messageInput.value = "";
 
-      if (event.key === "Enter") {
-
-        sendMessage();
-
-      }
-
-    }
-  );
+    });
 
 
+    /* =========================
+       RECEIVE MESSAGE
+    ========================= */
 
-  /* =====================================================
-     RECEIVE MESSAGES
-  ====================================================== */
+    socket.on("chat message", (message) => {
 
-  socket.on(
-    "chat message",
-    function (message) {
+      addMessage(message);
 
-      const messageDiv =
+    });
+
+
+    /* =========================
+       DISPLAY MESSAGE
+    ========================= */
+
+    function addMessage(message) {
+
+      const messageElement =
         document.createElement("div");
 
-      messageDiv.className =
+      messageElement.className =
         "message";
 
 
-      const userDiv =
-        document.createElement("div");
+      /* Avatar */
 
-      userDiv.className =
-        "messageUser";
+      let avatarHTML = "";
 
-      userDiv.textContent =
-        message.username;
+      if (message.avatar) {
+
+        avatarHTML = `
+          <img
+            class="messageAvatar"
+            src="${escapeHtml(message.avatar)}"
+            alt=""
+          >
+        `;
+
+      } else {
+
+        const firstLetter =
+          (
+            message.displayName ||
+            message.username ||
+            "U"
+          )[0].toUpperCase();
 
 
-      const textDiv =
-        document.createElement("div");
+        avatarHTML = `
+          <div class="messageAvatar"
+               style="
+                 display:flex;
+                 align-items:center;
+                 justify-content:center;
+                 font-weight:bold;
+                 background:#5865F2;
+               ">
+            ${escapeHtml(firstLetter)}
+          </div>
+        `;
 
-      textDiv.className =
-        "messageText";
-
-      textDiv.textContent =
-        message.text;
+      }
 
 
-      messageDiv.appendChild(
-        userDiv
-      );
+      /* Username */
 
-      messageDiv.appendChild(
-        textDiv
-      );
+      const name =
+        message.displayName ||
+        message.username ||
+        "User";
+
+
+      /* Time */
+
+      let time = "";
+
+      if (message.timestamp) {
+
+        const date =
+          new Date(message.timestamp);
+
+        time =
+          date.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit"
+          });
+
+      }
+
+
+      messageElement.innerHTML = `
+
+        ${avatarHTML}
+
+        <div class="messageContent">
+
+          <div class="messageTop">
+
+            <span
+              class="messageUsername"
+              title="@${escapeHtml(
+                message.username || "user"
+              )}"
+            >
+              ${escapeHtml(name)}
+            </span>
+
+            <span class="timestamp">
+              ${escapeHtml(time)}
+            </span>
+
+          </div>
+
+          <div class="messageText">
+            ${escapeHtml(message.text || "")}
+          </div>
+
+        </div>
+
+      `;
 
 
       messages.appendChild(
-        messageDiv
+        messageElement
       );
 
 
@@ -2001,29 +1399,516 @@
         messages.scrollHeight;
 
     }
-  );
 
 
+    /* =========================
+       PROFILE MODAL
+    ========================= */
 
-  /* =====================================================
-     CHECK EXISTING SESSION
-  ====================================================== */
+    const profileModal =
+      document.getElementById("profileModal");
 
-  supabaseClient.auth
-    .getSession()
-    .then(
-      function ({ data }) {
+    document
+      .getElementById("openProfile")
+      .addEventListener("click", () => {
 
-        if (data.session) {
+        openProfileEditor();
 
-          showChat();
+      });
+
+
+    document
+      .getElementById("closeProfile")
+      .addEventListener("click", () => {
+
+        profileModal.style.display =
+          "none";
+
+      });
+
+
+    /* =========================
+       PROFILE ELEMENTS
+    ========================= */
+
+    const displayNameInput =
+      document.getElementById(
+        "displayNameInput"
+      );
+
+    const profileUsernameInput =
+      document.getElementById(
+        "profileUsernameInput"
+      );
+
+    const avatarInput =
+      document.getElementById(
+        "avatarInput"
+      );
+
+    const bannerInput =
+      document.getElementById(
+        "bannerInput"
+      );
+
+    const bioInput =
+      document.getElementById(
+        "bioInput"
+      );
+
+    const customStatusInput =
+      document.getElementById(
+        "customStatusInput"
+      );
+
+    const emojiInput =
+      document.getElementById(
+        "emojiInput"
+      );
+
+    const accentColor =
+      document.getElementById(
+        "accentColor"
+      );
+
+    const websiteInput =
+      document.getElementById(
+        "websiteInput"
+      );
+
+    const socialInput =
+      document.getElementById(
+        "socialInput"
+      );
+
+    const decorationInput =
+      document.getElementById(
+        "decorationInput"
+      );
+
+    const effectInput =
+      document.getElementById(
+        "effectInput"
+      );
+
+
+    /* =========================
+       OPEN PROFILE EDITOR
+    ========================= */
+
+    function openProfileEditor() {
+
+      if (!currentProfile) return;
+
+
+      displayNameInput.value =
+        currentProfile.display_name || "";
+
+
+      profileUsernameInput.value =
+        currentProfile.username || "";
+
+
+      avatarInput.value =
+        currentProfile.avatar_url || "";
+
+
+      bannerInput.value =
+        currentProfile.banner_url || "";
+
+
+      bioInput.value =
+        currentProfile.bio || "";
+
+
+      customStatusInput.value =
+        currentProfile.custom_status || "";
+
+
+      emojiInput.value =
+        currentProfile.favorite_emoji || "😀";
+
+
+      accentColor.value =
+        currentProfile.accent_color ||
+        "#5865F2";
+
+
+      websiteInput.value =
+        currentProfile.website_url || "";
+
+
+      socialInput.value =
+        currentProfile.social_url || "";
+
+
+      decorationInput.value =
+        currentProfile.profile_decoration || "";
+
+
+      effectInput.value =
+        currentProfile.profile_effect || "";
+
+
+      updatePreview();
+
+
+      profileModal.style.display =
+        "flex";
+
+    }
+
+
+    /* =========================
+       LIVE PROFILE PREVIEW
+    ========================= */
+
+    const previewName =
+      document.getElementById(
+        "previewName"
+      );
+
+    const previewUsername =
+      document.getElementById(
+        "previewUsername"
+      );
+
+    const previewAvatar =
+      document.getElementById(
+        "previewAvatar"
+      );
+
+    const previewBanner =
+      document.getElementById(
+        "previewBanner"
+      );
+
+    const previewBio =
+      document.getElementById(
+        "previewBio"
+      );
+
+    const previewStatus =
+      document.getElementById(
+        "previewStatus"
+      );
+
+    const previewEmoji =
+      document.getElementById(
+        "previewEmoji"
+      );
+
+    const previewDecoration =
+      document.getElementById(
+        "previewDecoration"
+      );
+
+    const colorText =
+      document.getElementById(
+        "colorText"
+      );
+
+
+    function updatePreview() {
+
+      const name =
+        displayNameInput.value ||
+        "New User";
+
+      const username =
+        profileUsernameInput.value ||
+        "username";
+
+      const avatar =
+        avatarInput.value;
+
+      const banner =
+        bannerInput.value;
+
+      const bio =
+        bioInput.value ||
+        "Your bio will appear here.";
+
+      const status =
+        customStatusInput.value ||
+        "Online";
+
+      const emoji =
+        emojiInput.value ||
+        "😀";
+
+      const color =
+        accentColor.value ||
+        "#5865F2";
+
+
+      previewName.textContent =
+        name;
+
+      previewUsername.textContent =
+        "@" + username;
+
+      previewBio.textContent =
+        bio;
+
+      previewStatus.textContent =
+        "● " + status;
+
+      previewEmoji.textContent =
+        emoji;
+
+      colorText.textContent =
+        color;
+
+
+      previewBanner.style.backgroundColor =
+        color;
+
+
+      if (banner) {
+
+        previewBanner.style.backgroundImage =
+          `url("${banner}")`;
+
+      } else {
+
+        previewBanner.style.backgroundImage =
+          "none";
+
+      }
+
+
+      if (avatar) {
+
+        previewAvatar.src =
+          avatar;
+
+      } else {
+
+        previewAvatar.src =
+          "https://via.placeholder.com/100";
+
+      }
+
+
+      previewDecoration.textContent =
+        decorationInput.value;
+
+
+      /* Profile effects */
+
+      const preview =
+        document.getElementById(
+          "profilePreview"
+        );
+
+
+      preview.style.boxShadow = "none";
+      preview.style.backdropFilter = "none";
+
+
+      if (effectInput.value === "glow") {
+
+        preview.style.boxShadow =
+          `0 0 25px ${color}`;
+
+      }
+
+
+      if (effectInput.value === "shadow") {
+
+        preview.style.boxShadow =
+          "0 20px 50px rgba(0,0,0,.7)";
+
+      }
+
+
+      if (effectInput.value === "glass") {
+
+        preview.style.backdropFilter =
+          "blur(15px)";
+
+      }
+
+    }
+
+
+    [
+      displayNameInput,
+      profileUsernameInput,
+      avatarInput,
+      bannerInput,
+      bioInput,
+      customStatusInput,
+      emojiInput,
+      accentColor,
+      websiteInput,
+      socialInput,
+      decorationInput,
+      effectInput
+    ].forEach(element => {
+
+      element.addEventListener(
+        "input",
+        updatePreview
+      );
+
+      element.addEventListener(
+        "change",
+        updatePreview
+      );
+
+    });
+
+
+    /* =========================
+       SAVE PROFILE
+    ========================= */
+
+    document
+      .getElementById("saveProfile")
+      .addEventListener("click", async () => {
+
+        if (!loggedInUser) return;
+
+
+        const username =
+          profileUsernameInput.value.trim();
+
+
+        const displayName =
+          displayNameInput.value.trim();
+
+
+        if (!username) {
+
+          alert(
+            "Please enter a username."
+          );
+
+          return;
 
         }
 
-      }
-    );
 
-</script>
+        if (!displayName) {
+
+          alert(
+            "Please enter a display name."
+          );
+
+          return;
+
+        }
+
+
+        const updateData = {
+
+          username:
+            username,
+
+          display_name:
+            displayName,
+
+          bio:
+            bioInput.value.trim(),
+
+          avatar_url:
+            avatarInput.value.trim(),
+
+          banner_url:
+            bannerInput.value.trim(),
+
+          accent_color:
+            accentColor.value,
+
+          custom_status:
+            customStatusInput.value.trim(),
+
+          favorite_emoji:
+            emojiInput.value.trim() ||
+            "😀",
+
+          website_url:
+            websiteInput.value.trim(),
+
+          social_url:
+            socialInput.value.trim(),
+
+          profile_decoration:
+            decorationInput.value,
+
+          profile_effect:
+            effectInput.value,
+
+          updated_at:
+            new Date().toISOString()
+
+        };
+
+
+        const {
+          data,
+          error
+        } = await supabaseClient
+          .from("profiles")
+          .update(updateData)
+          .eq(
+            "id",
+            loggedInUser.id
+          )
+          .select()
+          .single();
+
+
+        if (error) {
+
+          alert(
+            "Could not save profile:\n" +
+            error.message
+          );
+
+          return;
+
+        }
+
+
+        currentProfile = data;
+
+
+        updateCurrentUserUI();
+
+
+        profileModal.style.display =
+          "none";
+
+
+        alert(
+          "Profile saved! 🎉"
+        );
+
+      });
+
+
+    /* =========================
+       ESCAPE HTML
+       Prevents messages from
+       inserting HTML into chat.
+    ========================= */
+
+    function escapeHtml(value) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        String(value ?? "");
+
+      return div.innerHTML;
+
+    }
+
+  </script>
 
 </body>
 </html>
