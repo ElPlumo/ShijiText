@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>My Chat</title>
 
   <!-- Supabase -->
@@ -13,6 +14,7 @@
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -24,7 +26,9 @@
       color: white;
     }
 
-    /* AUTH */
+    /* =========================
+       LOGIN / SIGN UP
+    ========================= */
 
     #authScreen {
       min-height: 100vh;
@@ -40,12 +44,12 @@
       padding: 35px;
       background: #2f3136;
       border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     .authBox h1 {
       text-align: center;
-      margin-bottom: 8px;
+      margin: 0 0 8px;
     }
 
     .subtitle {
@@ -85,11 +89,17 @@
       background: #4752c4;
     }
 
+    /* FIXED SIGN UP BUTTON */
+
     .switchButton {
+      width: 100%;
       margin-top: 18px;
-      text-align: center;
+      padding: 10px;
+      background: transparent;
+      border: none;
       color: #00aff4;
       cursor: pointer;
+      font-size: 14px;
     }
 
     .switchButton:hover {
@@ -100,13 +110,16 @@
       text-align: center;
       margin-top: 15px;
       color: #ffcc00;
+      min-height: 20px;
     }
 
     .hidden {
       display: none !important;
     }
 
-    /* CHAT */
+    /* =========================
+       CHAT
+    ========================= */
 
     #chatScreen {
       display: none;
@@ -200,57 +213,72 @@
     #sendButton:hover {
       background: #4752c4;
     }
+
   </style>
 </head>
 
 <body>
 
-  <!-- ========================= -->
-  <!-- LOGIN / SIGN UP SCREEN -->
-  <!-- ========================= -->
+  <!-- =========================
+       AUTH SCREEN
+  ========================= -->
 
   <div id="authScreen">
 
     <div class="authBox">
 
-      <h1 id="authTitle">Welcome Back!</h1>
+      <h1 id="authTitle">
+        Welcome Back!
+      </h1>
 
-      <div class="subtitle" id="authSubtitle">
+      <div
+        class="subtitle"
+        id="authSubtitle"
+      >
         Log in to continue to My Chat
       </div>
+
+      <!-- Username only appears during Sign Up -->
 
       <input
         id="usernameInput"
         class="hidden"
         type="text"
         placeholder="Username"
+        autocomplete="username"
       >
 
       <input
         id="emailInput"
         type="email"
         placeholder="Email"
+        autocomplete="email"
       >
 
       <input
         id="passwordInput"
         type="password"
         placeholder="Password"
+        autocomplete="current-password"
       >
 
       <button
         class="authButton"
         id="authButton"
+        type="button"
       >
         Log In
       </button>
 
-      <div
+      <!-- THIS IS NOW A REAL BUTTON -->
+
+      <button
         class="switchButton"
         id="switchButton"
+        type="button"
       >
         Don't have an account? Sign Up
-      </div>
+      </button>
 
       <div id="status"></div>
 
@@ -259,26 +287,34 @@
   </div>
 
 
-  <!-- ========================= -->
-  <!-- CHAT SCREEN -->
-  <!-- ========================= -->
+  <!-- =========================
+       CHAT SCREEN
+  ========================= -->
 
   <div id="chatScreen">
 
     <div id="topBar">
 
       <div id="topBarLeft">
+
         💬 <strong>My Chat</strong>
+
         <span id="currentUser"></span>
+
       </div>
 
-      <button id="logoutButton">
+      <button
+        id="logoutButton"
+        type="button"
+      >
         Log Out
       </button>
 
     </div>
 
+
     <div id="messages"></div>
+
 
     <div id="messageArea">
 
@@ -288,7 +324,10 @@
         placeholder="Message..."
       >
 
-      <button id="sendButton">
+      <button
+        id="sendButton"
+        type="button"
+      >
         Send
       </button>
 
@@ -379,10 +418,10 @@
 
 
   /* =========================
-     LOGIN / SIGN UP SWITCH
+     SWITCH LOGIN / SIGN UP
   ========================= */
 
-  switchButton.addEventListener("click", () => {
+  switchButton.addEventListener("click", function () {
 
     signupMode = !signupMode;
 
@@ -390,21 +429,32 @@
 
     if (signupMode) {
 
+      // SIGN UP SCREEN
+
       authTitle.textContent =
         "Create Your Account";
 
       authSubtitle.textContent =
-        "Make an account for My Chat";
+        "Make your account for My Chat";
 
       authButton.textContent =
         "Sign Up";
 
       usernameInput.classList.remove("hidden");
 
+      usernameInput.focus();
+
       switchButton.textContent =
         "Already have an account? Log In";
 
+      passwordInput.setAttribute(
+        "autocomplete",
+        "new-password"
+      );
+
     } else {
+
+      // LOGIN SCREEN
 
       authTitle.textContent =
         "Welcome Back!";
@@ -419,16 +469,24 @@
 
       switchButton.textContent =
         "Don't have an account? Sign Up";
+
+      emailInput.focus();
+
+      passwordInput.setAttribute(
+        "autocomplete",
+        "current-password"
+      );
+
     }
 
   });
 
 
   /* =========================
-     AUTH BUTTON
+     SIGN UP / LOGIN
   ========================= */
 
-  authButton.addEventListener("click", async () => {
+  authButton.addEventListener("click", async function () {
 
     const email =
       emailInput.value.trim();
@@ -440,16 +498,29 @@
       usernameInput.value.trim();
 
 
-    if (!email || !password) {
+    /* VALIDATION */
+
+    if (!email) {
 
       status.textContent =
-        "Please enter your email and password.";
+        "Please enter your email.";
 
       return;
     }
 
 
-    /* SIGN UP */
+    if (!password) {
+
+      status.textContent =
+        "Please enter your password.";
+
+      return;
+    }
+
+
+    /* =========================
+       SIGN UP
+    ========================= */
 
     if (signupMode) {
 
@@ -458,18 +529,32 @@
         status.textContent =
           "Please choose a username.";
 
+        usernameInput.focus();
+
+        return;
+      }
+
+
+      if (username.length < 3) {
+
+        status.textContent =
+          "Username must be at least 3 characters.";
+
         return;
       }
 
 
       status.textContent =
-        "Creating account...";
+        "Creating your account...";
 
 
       const { data, error } =
         await supabaseClient.auth.signUp({
+
           email: email,
+
           password: password
+
         });
 
 
@@ -482,22 +567,28 @@
       }
 
 
+      /* CREATE PROFILE */
+
       if (data.user) {
 
         const { error: profileError } =
           await supabaseClient
             .from("profiles")
             .insert({
+
               id: data.user.id,
+
               username: username,
+
               display_name: username
+
             });
 
 
         if (profileError) {
 
           status.textContent =
-            "Account created, but profile setup failed: " +
+            "Account created, but your profile could not be created: " +
             profileError.message;
 
           return;
@@ -507,13 +598,16 @@
 
 
       status.textContent =
-        "Account created! You may need to confirm your email.";
+        "Account created! Check your email if confirmation is required.";
 
       return;
+
     }
 
 
-    /* LOGIN */
+    /* =========================
+       LOGIN
+    ========================= */
 
     status.textContent =
       "Logging in...";
@@ -521,8 +615,11 @@
 
     const { error } =
       await supabaseClient.auth.signInWithPassword({
+
         email: email,
+
         password: password
+
       });
 
 
@@ -561,8 +658,13 @@
     const { data: profile } =
       await supabaseClient
         .from("profiles")
-        .select("username, display_name")
-        .eq("id", loggedInUser.id)
+        .select(
+          "username, display_name"
+        )
+        .eq(
+          "id",
+          loggedInUser.id
+        )
         .maybeSingle();
 
 
@@ -582,6 +684,7 @@
 
       currentUser.textContent =
         "@" + loggedInUser.email;
+
     }
 
   }
@@ -591,27 +694,30 @@
      LOG OUT
   ========================= */
 
-  logoutButton.addEventListener("click", async () => {
+  logoutButton.addEventListener(
+    "click",
+    async function () {
 
-    await supabaseClient.auth.signOut();
+      await supabaseClient.auth.signOut();
 
-    loggedInUser = null;
+      loggedInUser = null;
 
-    chatScreen.style.display =
-      "none";
+      chatScreen.style.display =
+        "none";
 
-    authScreen.style.display =
-      "flex";
+      authScreen.style.display =
+        "flex";
 
-    emailInput.value = "";
+      emailInput.value = "";
 
-    passwordInput.value = "";
+      passwordInput.value = "";
 
-    usernameInput.value = "";
+      usernameInput.value = "";
 
-    status.textContent = "";
+      status.textContent = "";
 
-  });
+    }
+  );
 
 
   /* =========================
@@ -623,22 +729,29 @@
     const text =
       messageInput.value.trim();
 
+
     if (!text) {
       return;
     }
 
 
-    socket.emit("chat message", {
+    socket.emit(
+      "chat message",
+      {
 
-      text: text,
+        text: text,
 
-      username:
-        loggedInUser?.email || "User"
+        username:
+          loggedInUser?.email ||
+          "User"
 
-    });
+      }
+    );
 
 
     messageInput.value = "";
+
+    messageInput.focus();
 
   }
 
@@ -651,10 +764,12 @@
 
   messageInput.addEventListener(
     "keydown",
-    (event) => {
+    function (event) {
 
       if (event.key === "Enter") {
+
         sendMessage();
+
       }
 
     }
@@ -662,57 +777,68 @@
 
 
   /* =========================
-     RECEIVE MESSAGE
+     RECEIVE MESSAGES
   ========================= */
 
-  socket.on("chat message", (message) => {
+  socket.on(
+    "chat message",
+    function (message) {
 
-    const messageDiv =
-      document.createElement("div");
+      const messageDiv =
+        document.createElement("div");
 
-    messageDiv.className =
-      "message";
-
-
-    const userDiv =
-      document.createElement("div");
-
-    userDiv.className =
-      "messageUser";
-
-    userDiv.textContent =
-      message.username;
+      messageDiv.className =
+        "message";
 
 
-    const textDiv =
-      document.createElement("div");
+      const userDiv =
+        document.createElement("div");
 
-    textDiv.className =
-      "messageText";
+      userDiv.className =
+        "messageUser";
 
-    textDiv.textContent =
-      message.text;
-
-
-    messageDiv.appendChild(userDiv);
-
-    messageDiv.appendChild(textDiv);
-
-    messages.appendChild(messageDiv);
+      userDiv.textContent =
+        message.username;
 
 
-    messages.scrollTop =
-      messages.scrollHeight;
+      const textDiv =
+        document.createElement("div");
 
-  });
+      textDiv.className =
+        "messageText";
+
+      textDiv.textContent =
+        message.text;
+
+
+      messageDiv.appendChild(
+        userDiv
+      );
+
+      messageDiv.appendChild(
+        textDiv
+      );
+
+
+      messages.appendChild(
+        messageDiv
+      );
+
+
+      messages.scrollTop =
+        messages.scrollHeight;
+
+    }
+  );
 
 
   /* =========================
-     CHECK IF ALREADY LOGGED IN
+     CHECK EXISTING SESSION
   ========================= */
 
-  supabaseClient.auth.getSession()
-    .then(({ data }) => {
+  supabaseClient.auth
+    .getSession()
+    .then(function ({ data }) {
 
       if (data.session) {
 
